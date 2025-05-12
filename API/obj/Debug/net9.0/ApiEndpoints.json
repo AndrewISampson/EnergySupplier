@@ -1,0 +1,18 @@
+[
+  {
+    "ContainingType": "API.Controllers.WebsiteRequestController",
+    "Method": "Post",
+    "RelativePath": "api/WebsiteRequest",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestData",
+        "Type": "System.Object",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
