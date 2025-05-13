@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pIFklUzhm64=",
+  "dgSpecHash": "1B+jyD5HjDk=",
   "success": true,
-  "projectFilePath": "F:\\API\\API.csproj",
+  "projectFilePath": "F:\\EnergySupplier\\API\\API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Andrew Sampson\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
     "C:\\Users\\Andrew Sampson\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",

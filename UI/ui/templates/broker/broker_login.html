@@ -8,6 +8,13 @@
   <div class="container d-flex align-items-center justify-content-center min-vh-100">
     <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
       <h3 class="mb-4 text-center">Login</h3>
+      
+      {% if error %}
+        <div class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
+      {% endif %}
+
       <form method="POST" action="{% url 'broker_login' %}">
         {% csrf_token %}
         <div class="mb-3">

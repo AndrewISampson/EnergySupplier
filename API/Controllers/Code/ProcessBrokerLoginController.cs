@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using API.Entity.Code;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace API.Controllers.Code
@@ -12,7 +14,12 @@ namespace API.Controllers.Code
 
         internal IActionResult ProcessBrokerLogin(JObject json)
         {
-            return Ok(new { message = $"I made it to the ProcessBrokerLogin function" });
+            var processBrokerLoginEntity = JsonConvert.DeserializeObject<ProcessBrokerLoginEntity>(json.ToString());
+            var securityController = new SecurityController();
+
+            var decryptedUsername = securityController.Decrypt(processBrokerLoginEntity.Username, processBrokerLoginEntity.iv_username);
+
+            return Ok(new { authenticated = decryptedUsername == "Andrew.Sampson" });
         }
     }
 }

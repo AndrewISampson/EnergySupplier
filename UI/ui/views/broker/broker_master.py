@@ -1,6 +1,4 @@
-from django.http import HttpResponse
-from django.template import loader
+from django.shortcuts import redirect
 
 def home(request):
-    template = loader.get_template('broker/broker_login.html')
-    return HttpResponse(template.render())
+    return redirect('broker_login')

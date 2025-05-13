@@ -235,11 +235,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\API\\API.csproj",
+      "projectUniqueName": "F:\\EnergySupplier\\API\\API.csproj",
       "projectName": "API",
-      "projectPath": "F:\\API\\API.csproj",
+      "projectPath": "F:\\EnergySupplier\\API\\API.csproj",
       "packagesPath": "C:\\Users\\Andrew Sampson\\.nuget\\packages\\",
-      "outputPath": "F:\\API\\obj\\",
+      "outputPath": "F:\\EnergySupplier\\API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 
 # 256-bit key (must match your C# key, keep this secure!)
-AES_SECRET_KEY = b'your-32-byte-long-shared-secret-key!'  # 32 bytes for AES-256
+AES_SECRET_KEY = b'32-byte-long-secret-key-here-12!'  # 32 bytes exactly
 
 def encrypt_aes(data, key):
     # Pad the data to a multiple of 16 bytes (AES block size)

@@ -1,13 +1,17 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "F:\\API\\",
+  "WorkspaceRootPath": "F:\\EnergySupplier\\API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|f:\\api\\controllers\\code\\processbrokerlogincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|f:\\energysupplier\\api\\controllers\\code\\processbrokerlogincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|solutionrelative:controllers\\code\\processbrokerlogincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|f:\\api\\controllers\\websiterequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|f:\\energysupplier\\api\\entity\\code\\processbrokerloginentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|solutionrelative:entity\\code\\processbrokerloginentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|f:\\energysupplier\\api\\controllers\\websiterequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|solutionrelative:controllers\\websiterequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -18,31 +22,42 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "WebsiteRequestController.cs",
-              "DocumentMoniker": "F:\\API\\Controllers\\WebsiteRequestController.cs",
+              "DocumentMoniker": "F:\\EnergySupplier\\API\\Controllers\\WebsiteRequestController.cs",
               "RelativeDocumentMoniker": "Controllers\\WebsiteRequestController.cs",
-              "ToolTip": "F:\\API\\Controllers\\WebsiteRequestController.cs",
+              "ToolTip": "F:\\EnergySupplier\\API\\Controllers\\WebsiteRequestController.cs",
               "RelativeToolTip": "Controllers\\WebsiteRequestController.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABcAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-08T17:29:24.824Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ProcessBrokerLoginEntity.cs",
+              "DocumentMoniker": "F:\\EnergySupplier\\API\\Entity\\Code\\ProcessBrokerLoginEntity.cs",
+              "RelativeDocumentMoniker": "Entity\\Code\\ProcessBrokerLoginEntity.cs",
+              "ToolTip": "F:\\EnergySupplier\\API\\Entity\\Code\\ProcessBrokerLoginEntity.cs",
+              "RelativeToolTip": "Entity\\Code\\ProcessBrokerLoginEntity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T18:37:57.534Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "ProcessBrokerLoginController.cs",
-              "DocumentMoniker": "F:\\API\\Controllers\\Code\\ProcessBrokerLoginController.cs",
+              "DocumentMoniker": "F:\\EnergySupplier\\API\\Controllers\\Code\\ProcessBrokerLoginController.cs",
               "RelativeDocumentMoniker": "Controllers\\Code\\ProcessBrokerLoginController.cs",
-              "ToolTip": "F:\\API\\Controllers\\Code\\ProcessBrokerLoginController.cs",
+              "ToolTip": "F:\\EnergySupplier\\API\\Controllers\\Code\\ProcessBrokerLoginController.cs",
               "RelativeToolTip": "Controllers\\Code\\ProcessBrokerLoginController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-10T15:41:01.73Z",
               "EditorCaption": ""
