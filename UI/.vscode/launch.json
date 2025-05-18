@@ -12,7 +12,10 @@
             "args": [
                 "runserver"
             ],
-            "django": true
+            "django": true,
+            "env": {
+                "SKIP_API_SSL_VERIFICATION": "True"
+            }
         }
     ]
 }

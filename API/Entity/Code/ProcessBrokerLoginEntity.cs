@@ -2,7 +2,6 @@
 {
     public class ProcessBrokerLoginEntity()
     {
-        //public string Process { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string iv_username { get; set; }

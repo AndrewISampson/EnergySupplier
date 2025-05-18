@@ -8,6 +8,8 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class WebsiteRequestController : ControllerBase
     {
+        internal ParallelOptions ParallelOptions => new() { MaxDegreeOfParallelism = 2 };
+
         private readonly GetProcessFunctionController _getProcessFunctionController;
 
         public WebsiteRequestController()

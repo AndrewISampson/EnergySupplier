@@ -1,8 +1,11 @@
-import requests
 from django.shortcuts import render, redirect
 from ui.views.generic.security import *
+from ui.utils.api import call_api
 
 def broker_login_view(request):
+    context = {}
+    context['hide_nav'] = True
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -22,26 +25,16 @@ def broker_login_view(request):
         }
 
         try:
-            api_url = 'https://localhost:7001/api/websiterequest'
-            response = requests.post(
-                api_url,
-                json=payload,
-                verify=False)
+            result = call_api(payload)
 
-            response.raise_for_status()
-            result = response.json()
-
-            if result.get('authenticated'):
+            if result.json().get('authenticated'):
                 return redirect('broker_dashboard')
             else:
-                return render(request, 'broker/broker_login.html', {
-                    'error': 'Invalid credentials'
-                })
+                context['error'] = 'Invalid credentials'
+                return render(request, 'broker/broker_login.html', context)
 
         except Exception as e:
-            print(str(e))
-            return render(request, 'broker/broker_login.html', {
-                'error': 'Login failed: API error'
-            })
+            context['error'] = 'Login failed: API error'
+            return render(request, 'broker/broker_login.html', context)
 
-    return render(request, 'broker/broker_login.html')
+    return render(request, 'broker/broker_login.html', context)
