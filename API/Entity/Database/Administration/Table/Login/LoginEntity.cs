@@ -1,8 +1,8 @@
 ﻿using System.Data;
 
-namespace API.Entity.Database.Administration.Table.Password
+namespace API.Entity.Database.Administration.Table.Login
 {
-    public class PasswordEntity
+    public class LoginEntity
     {
         public long Id;
         public DateTime CreatedDateTime;
@@ -13,7 +13,7 @@ namespace API.Entity.Database.Administration.Table.Password
         public long ClosedByUserId;
         public Guid Guid;
 
-        public PasswordEntity(DataRow dataRow)
+        public LoginEntity(DataRow dataRow)
         {
             Id = Convert.ToInt64(dataRow["Id"].ToString());
             CreatedDateTime = Convert.ToDateTime(dataRow["CreatedDateTime"].ToString());

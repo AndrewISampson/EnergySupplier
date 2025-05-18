@@ -20,12 +20,25 @@ namespace API.Controllers.Database.Administration.Table.User
                 .FirstOrDefault();
         }
 
+        internal List<UserDetailEntity> GetActiveEntityListByIdAndAttributeId(long id, long attributeId)
+        {
+            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"UserDetail\" WHERE \"IsActiveRecord\" = '1' AND \"UserId\" = {id} AND \"UserAttributeId\" = {attributeId}")
+                .Rows.Cast<DataRow>()
+                .Select(d => new UserDetailEntity(d))
+                .ToList();
+        }
+
         internal UserDetailEntity GetActiveEntityByAttributeIdAndDescription(long attributeId, string description)
         {
             return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"UserDetail\" WHERE \"IsActiveRecord\" = '1'AND \"UserAttributeId\" = {attributeId} AND \"Description\" = '{description}' ")
                 .Rows.Cast<DataRow>()
                 .Select(d => new UserDetailEntity(d))
                 .FirstOrDefault();
+        }
+
+        internal void Insert(long id, long attributeId, string description)
+        {
+            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"UserDetail\" (\"CreatedByUserId\", \"UserId\", \"UserAttributeId\", \"Description\") VALUES (1, {id}, {attributeId}, '{description}'");
         }
     }
 }

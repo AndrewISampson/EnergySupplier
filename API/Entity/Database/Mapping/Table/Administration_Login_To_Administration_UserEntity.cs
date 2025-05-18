@@ -1,8 +1,8 @@
 ﻿using System.Data;
 
-namespace API.Entity.Database.Administration.Table.Password
+namespace API.Entity.Database.Mapping.Table
 {
-    public class PasswordEntity
+    public class Administration_Login_To_Administration_UserEntity
     {
         public long Id;
         public DateTime CreatedDateTime;
@@ -11,9 +11,10 @@ namespace API.Entity.Database.Administration.Table.Password
         public DateTime EffectiveToDateTime;
         public bool IsActiveRecord;
         public long ClosedByUserId;
-        public Guid Guid;
+        public long LoginId;
+        public long UserId;
 
-        public PasswordEntity(DataRow dataRow)
+        public Administration_Login_To_Administration_UserEntity(DataRow dataRow)
         {
             Id = Convert.ToInt64(dataRow["Id"].ToString());
             CreatedDateTime = Convert.ToDateTime(dataRow["CreatedDateTime"].ToString());
@@ -22,7 +23,8 @@ namespace API.Entity.Database.Administration.Table.Password
             EffectiveToDateTime = Convert.ToDateTime(dataRow["EffectiveToDateTime"].ToString());
             IsActiveRecord = Convert.ToBoolean(dataRow["IsActiveRecord"].ToString());
             ClosedByUserId = string.IsNullOrWhiteSpace(dataRow["ClosedByUserId"].ToString()) ? 0 : Convert.ToInt64(dataRow["ClosedByUserId"].ToString());
-            Guid.TryParse(dataRow["Guid"].ToString(), out Guid);
+            LoginId = Convert.ToInt64(dataRow["LoginId"].ToString());
+            UserId = Convert.ToInt64(dataRow["UserId"].ToString());
         }
     }
 }

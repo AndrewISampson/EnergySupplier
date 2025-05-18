@@ -14,47 +14,46 @@ namespace API.Controllers
         internal DataTable GetDataTable(string SQL)
         {
             var dataTable = new DataTable();
-
-            using (var npgsqlConnection = OpenDatabaseConnection())
-            {
-                using (var npgsqlCommand = CreateDatabaseCommand(SQL, npgsqlConnection))
-                {
-                    using (var npgsqlDataAdapter = new NpgsqlDataAdapter(npgsqlCommand))
-                    {
-                        npgsqlDataAdapter.Fill(dataTable);
-                    }
-                }
-            }
-
-            return dataTable;
-        }
-
-        internal string ExecuteScalar()
-        {
-            var result = string.Empty;
             var npgsqlConnection = OpenDatabaseConnection();
 
             using (npgsqlConnection)
             {
-                var npgsqlCommand = CreateDatabaseCommand("SELECT version()", npgsqlConnection);
-                result = npgsqlCommand.ExecuteScalar()?.ToString();
+                using var npgsqlCommand = CreateDatabaseCommand(SQL, npgsqlConnection);
+                using var npgsqlDataAdapter = new NpgsqlDataAdapter(npgsqlCommand);
+                npgsqlDataAdapter.Fill(dataTable);
             }
 
             CloseDatabaseConnection(npgsqlConnection);
 
-            return result;
+            return dataTable;
+        }
+
+        internal void ExecuteScalar(string SQL)
+        {
+            var npgsqlConnection = OpenDatabaseConnection();
+
+            using (npgsqlConnection)
+            {
+                var npgsqlCommand = CreateDatabaseCommand(SQL, npgsqlConnection);
+                npgsqlCommand.ExecuteScalar();
+            }
+
+            CloseDatabaseConnection(npgsqlConnection);
         }
 
         private NpgsqlCommand CreateDatabaseCommand(string SQL, NpgsqlConnection npgsqlConnection)
         {
-            return new NpgsqlCommand(SQL, npgsqlConnection);
+            return new NpgsqlCommand(SQL, npgsqlConnection)
+            {
+                CommandTimeout = 0
+            };
         }
 
         private NpgsqlConnection OpenDatabaseConnection()
         {
             var npgsqlConnection = new NpgsqlConnection(_connectionString);
 
-            while (npgsqlConnection.State != System.Data.ConnectionState.Open)
+            while (npgsqlConnection.State != ConnectionState.Open)
             {
                 try
                 {
@@ -71,7 +70,7 @@ namespace API.Controllers
 
         private static void CloseDatabaseConnection(NpgsqlConnection npgsqlConnection)
         {
-            while (npgsqlConnection.State != System.Data.ConnectionState.Closed)
+            while (npgsqlConnection.State != ConnectionState.Closed)
             {
                 try
                 {
