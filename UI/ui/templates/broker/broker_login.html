@@ -30,15 +30,16 @@
             </span>
           </div>
         </div>
-        <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" id="rememberMe" name="remember">
-          <label class="form-check-label" for="rememberMe">Remember me</label>
+        <button type="submit" class="btn btn-primary w-100" id="loginButton">Login</button>
+        <div id="spinner" class="text-center mt-3" style="display: none;">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
       </form>
 
       <div class="text-end mt-2">
-        <a href="{% url 'broker_forgot_password' %}">Forgot Password?</a>
+        <a href="{% url 'broker_forgot_password' %}" id="forgotPasswordLink">Forgot Password?</a>
       </div>
     </div>
   </div>
@@ -53,6 +54,22 @@
       passwordInput.type = isPassword ? 'text' : 'password';
       icon.classList.toggle('fa-eye');
       icon.classList.toggle('fa-eye-slash');
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.querySelector("form");
+      const loginButton = document.getElementById("loginButton");
+      const spinner = document.getElementById("spinner");
+      const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+
+      form.addEventListener("submit", function () {
+        loginButton.disabled = true;
+        spinner.style.display = "block";
+        document.body.style.cursor = "progress";
+        forgotPasswordLink.style.pointerEvents = "none";
+        forgotPasswordLink.style.opacity = "0.5";
+      });
     });
   </script>
 {% endblock %}
