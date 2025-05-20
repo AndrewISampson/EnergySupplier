@@ -11,19 +11,24 @@
       
       {% if error %}
         <div class="alert alert-danger" role="alert">
-          {{ error }}
+          {{ error|safe }}
         </div>
       {% endif %}
 
       <form method="POST" action="{% url 'broker_login' %}">
         {% csrf_token %}
         <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" class="form-control" id="username" name="username" required autofocus>
+          <label for="username" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="username" name="username" required autofocus>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
           <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" name="password" required>
+          <div class="input-group">
+            <input type="password" class="form-control" id="password" name="password" required>
+            <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+              <i class="fa fa-eye" id="toggleIcon"></i>
+            </span>
+          </div>
         </div>
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="rememberMe" name="remember">
@@ -37,4 +42,17 @@
       </div>
     </div>
   </div>
+
+  <script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const icon = document.getElementById('toggleIcon');
+
+    togglePassword.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      icon.classList.toggle('fa-eye');
+      icon.classList.toggle('fa-eye-slash');
+    });
+  </script>
 {% endblock %}

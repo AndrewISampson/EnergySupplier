@@ -38,7 +38,7 @@ namespace API.Controllers.Database.Administration.Table.User
 
         internal void Insert(long id, long attributeId, string description)
         {
-            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"UserDetail\" (\"CreatedByUserId\", \"UserId\", \"UserAttributeId\", \"Description\") VALUES (1, {id}, {attributeId}, '{description}'");
+            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"UserDetail\" (\"CreatedByUserId\", \"UserId\", \"UserAttributeId\", \"Description\") VALUES (1, {id}, {attributeId}, '{description}')");
         }
     }
 }

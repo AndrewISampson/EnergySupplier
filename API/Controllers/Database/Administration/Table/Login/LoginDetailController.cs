@@ -27,7 +27,7 @@ namespace API.Controllers.Database.Administration.Table.Login
 
         internal void Insert(long id, long attributeId, string description)
         {
-            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"LoginDetail\" (\"CreatedByUserId\", \"LoginId\", \"LoginAttributeId\", \"Description\") VALUES (1, {id}, {attributeId}, '{description}'");
+            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"LoginDetail\" (\"CreatedByUserId\", \"LoginId\", \"LoginAttributeId\", \"Description\") VALUES (1, {id}, {attributeId}, '{description}')");
         }
     }
 }

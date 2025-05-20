@@ -22,7 +22,7 @@ namespace API.Controllers.Database.Mapping.Table
 
         internal void Insert(long loginId, long userId)
         {
-            databaseController.ExecuteScalar($"INSERT INTO \"Mapping\".\"Administration.LoginToAdministration.User\" (\"CreatedByUserId\", \"LoginId\", \"UserId\") VALUES (1, {loginId}, {userId}");
+            databaseController.ExecuteScalar($"INSERT INTO \"Mapping\".\"Administration.LoginToAdministration.User\" (\"CreatedByUserId\", \"LoginId\", \"UserId\") VALUES (1, {loginId}, {userId})");
         }
     }
 }

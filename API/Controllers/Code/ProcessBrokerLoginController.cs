@@ -1,6 +1,7 @@
 ﻿using API.Controllers.Database.Administration.Table.Login;
 using API.Controllers.Database.Administration.Table.Password;
 using API.Controllers.Database.Administration.Table.User;
+using API.Controllers.Database.Information.Table.Setting;
 using API.Controllers.Database.Mapping.Table;
 using API.Entity.Code;
 using API.Entity.Database.Administration.Table.Login;
@@ -46,7 +47,7 @@ namespace API.Controllers.Code
                 new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Host"], Description = processBrokerLoginEntity.client_metadata.host },
                 new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Request Method"], Description = processBrokerLoginEntity.client_metadata.request_method },
                 new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Query String"], Description = processBrokerLoginEntity.client_metadata.query_string },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Session Key"], Description = processBrokerLoginEntity.client_metadata.session_key.ToString() },
+                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Session Key"], Description = processBrokerLoginEntity.client_metadata.session_key == null ? "" : processBrokerLoginEntity.client_metadata.session_key.ToString() },
                 new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["CSRF Token"], Description = processBrokerLoginEntity.client_metadata.cookies.csrftoken },
             };
             loginDetailEntityList.ForEach(l => l.LoginId = loginEntity.Id);
@@ -131,13 +132,27 @@ namespace API.Controllers.Code
                 var administration_Login_To_Administration_UserController = new Administration_Login_To_Administration_UserController();
                 administration_Login_To_Administration_UserController.Insert(loginId, userId);
 
+                if (failureReason == "Account is locked")
+                {
+                    return;
+                }
+
+                var settingAttributeController = new SettingAttributeController();
+                var nameAccountSettingAttributeEntity = settingAttributeController.GetActiveEntityByDescription("Name");
+                var valueAccountSettingAttributeEntity = settingAttributeController.GetActiveEntityByDescription("Value");
+
+                var settingDetailController = new SettingDetailController();
+                var failedLoginCountToLockAccountNameSettingDetailEntity = settingDetailController.GetActiveEntityByAttributeIdAndDescription(nameAccountSettingAttributeEntity.Id, "Failed Login Count To Lock Account");
+                var failedLoginCountToLockAccountValueSettingDetailEntity = settingDetailController.GetActiveEntityByIdAndAttributeId(failedLoginCountToLockAccountNameSettingDetailEntity.SettingId, valueAccountSettingAttributeEntity.Id);
+                var failedLoginCountToLockAccountValue = Convert.ToInt16(failedLoginCountToLockAccountValueSettingDetailEntity.Description);
+
                 var loginIdList = administration_Login_To_Administration_UserController.GetActiveEntityListByUserId(userId)
                     .OrderByDescending(l => l.Id)
                     .Select(l => l.LoginId)
-                    .Take(5)
+                    .Take(failedLoginCountToLockAccountValue)
                     .ToList();
 
-                if (loginIdList.Count < 5)
+                if (loginIdList.Count < failedLoginCountToLockAccountValue)
                 {
                     return;
                 }

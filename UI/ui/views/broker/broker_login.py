@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from ui.views.generic.security import *
+from ui.utils.security import encrypt_aes, AES_SECRET_KEY, get_metadata
 from ui.utils.api import call_api
 
 def broker_login_view(request):
@@ -30,7 +30,7 @@ def broker_login_view(request):
             if result.json().get('authenticated'):
                 return redirect('broker_dashboard')
             else:
-                context['error'] = 'Invalid credentials'
+                context['error'] = 'Unable to validate credentials.<br><br>Either the username/password details entered are incorrect or the account has been locked'
                 return render(request, 'broker/broker_login.html', context)
 
         except Exception as e:

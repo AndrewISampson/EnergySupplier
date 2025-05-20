@@ -3,14 +3,6 @@
   "WorkspaceRootPath": "F:\\EnergySupplier\\API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|f:\\energysupplier\\api\\controllers\\code\\processbrokerlogincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|solutionrelative:controllers\\code\\processbrokerlogincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|f:\\energysupplier\\api\\controllers\\database\\administration\\table\\user\\userdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|solutionrelative:controllers\\database\\administration\\table\\user\\userdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|f:\\energysupplier\\api\\controllers\\websiterequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3F37DF21-E44A-47B8-B540-2176D09602D8}|API.csproj|solutionrelative:controllers\\websiterequestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -22,45 +14,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "WebsiteRequestController.cs",
               "DocumentMoniker": "F:\\EnergySupplier\\API\\Controllers\\WebsiteRequestController.cs",
               "RelativeDocumentMoniker": "Controllers\\WebsiteRequestController.cs",
               "ToolTip": "F:\\EnergySupplier\\API\\Controllers\\WebsiteRequestController.cs",
               "RelativeToolTip": "Controllers\\WebsiteRequestController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-08T17:29:24.824Z",
-              "IsPinned": true
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UserDetailController.cs",
-              "DocumentMoniker": "F:\\EnergySupplier\\API\\Controllers\\Database\\Administration\\Table\\User\\UserDetailController.cs",
-              "RelativeDocumentMoniker": "Controllers\\Database\\Administration\\Table\\User\\UserDetailController.cs",
-              "ToolTip": "F:\\EnergySupplier\\API\\Controllers\\Database\\Administration\\Table\\User\\UserDetailController.cs",
-              "RelativeToolTip": "Controllers\\Database\\Administration\\Table\\User\\UserDetailController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACcAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-18T15:38:13.218Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ProcessBrokerLoginController.cs",
-              "DocumentMoniker": "F:\\EnergySupplier\\API\\Controllers\\Code\\ProcessBrokerLoginController.cs",
-              "RelativeDocumentMoniker": "Controllers\\Code\\ProcessBrokerLoginController.cs",
-              "ToolTip": "F:\\EnergySupplier\\API\\Controllers\\Code\\ProcessBrokerLoginController.cs",
-              "RelativeToolTip": "Controllers\\Code\\ProcessBrokerLoginController.cs",
-              "ViewState": "AgIAAHIAAAAAAAAAAAAAAIoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T15:41:01.73Z",
+              "IsPinned": true,
               "EditorCaption": ""
             }
           ]

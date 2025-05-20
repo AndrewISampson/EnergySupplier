@@ -1,6 +1,4 @@
-from django.http import HttpResponse
-from django.template import loader
+from django.shortcuts import render
 
 def home(request):
-    template = loader.get_template('internal/internal_login.html')
-    return HttpResponse(template.render())
+    return render(request, 'internal/internal_login.html')

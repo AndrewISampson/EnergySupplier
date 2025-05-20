@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-import requests
 from ui.utils.api import call_api
 
 @csrf_exempt
