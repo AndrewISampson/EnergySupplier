@@ -19,5 +19,26 @@ namespace API.Controllers.Database.Administration.Table.Password
                 .Select(d => new PasswordDetailEntity(d))
                 .FirstOrDefault();
         }
+
+        internal List<PasswordDetailEntity> GetActiveEntityListByAttributeId(long attributeId)
+        {
+            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"PasswordDetail\" WHERE \"IsActiveRecord\" = '1' AND \"PasswordAttributeId\" = {attributeId}")
+                .Rows.Cast<DataRow>()
+                .Select(d => new PasswordDetailEntity(d))
+                .ToList();
+        }
+
+        internal PasswordDetailEntity GetActiveEntityByAttributeIdAndDescription(long attributeId, string description)
+        {
+            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"PasswordDetail\" WHERE \"IsActiveRecord\" = '1'AND \"PasswordAttributeId\" = {attributeId} AND \"Description\" = '{description}' ")
+                .Rows.Cast<DataRow>()
+                .Select(d => new PasswordDetailEntity(d))
+                .FirstOrDefault();
+        }
+
+        internal void Insert(long createdByUserId, long id, long attributeId, string description)
+        {
+            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"PasswordDetail\" (\"CreatedByUserId\", \"PasswordId\", \"PasswordAttributeId\", \"Description\") VALUES ({createdByUserId}, {id}, {attributeId}, '{description}')");
+        }
     }
 }

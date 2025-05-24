@@ -31,7 +31,6 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                // Handle errors in case JSON parsing fails
                 return BadRequest(new { error = "Invalid JSON format", details = ex.Message });
             }
         }

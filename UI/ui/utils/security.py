@@ -7,7 +7,7 @@ from cryptography.hazmat.backends import default_backend
 # 256-bit key (must match your C# key, keep this secure!)
 AES_SECRET_KEY = b'32-byte-long-secret-key-here-12!'  # 32 bytes exactly
 
-def encrypt_aes(data, key):
+def encrypt_aes(data):
     # Pad the data to a multiple of 16 bytes (AES block size)
     padder = padding.PKCS7(128).padder()
     padded_data = padder.update(data.encode()) + padder.finalize()
@@ -15,7 +15,7 @@ def encrypt_aes(data, key):
     # Generate a random IV
     iv = os.urandom(16)
 
-    cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
+    cipher = Cipher(algorithms.AES(AES_SECRET_KEY), modes.CBC(iv), backend=default_backend())
     encryptor = cipher.encryptor()
     encrypted = encryptor.update(padded_data) + encryptor.finalize()
 

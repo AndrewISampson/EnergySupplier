@@ -35,5 +35,15 @@ namespace API.Controllers.Database.Mapping.Table
                 .Select(d => new Administration_Password_To_Administration_UserEntity(d))
                 .FirstOrDefault();
         }
+
+        internal void Insert(long createdByUserId, long passwordId, long userId)
+        {
+            databaseController.ExecuteScalar($"INSERT INTO \"Mapping\".\"Administration.PasswordToAdministration.User\" (\"CreatedByUserId\", \"PasswordId\", \"UserId\") VALUES ({createdByUserId}, {passwordId}, {userId})");
+        }
+
+        internal void UpdateEffectiveToDateTime(long id, long userId)
+        {
+            databaseController.ExecuteScalar($"UPDATE \"Mapping\".\"Administration.PasswordToAdministration.User\" SET \"EffectiveToDateTime\" = NOW() AT TIME ZONE 'UTC', \"ClosedByUserId\" = {userId} WHERE \"Id\" = {id}");
+        }
     }
 }

@@ -1,3 +1,4 @@
+from django.shortcuts import render
 import requests
 from django.conf import settings
 
@@ -28,3 +29,7 @@ def call_api(payload, method='POST'):
         return response
     except requests.RequestException as e:
         return {'error': str(e), 'status': 'api_call_failed'}
+
+def handle_API_error(request, URL, context):
+    context['error'] = 'This request could not be completed due to an API error'
+    return render(request, URL, context)

@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using API.Controllers.Database.Administration.Table.ValidationCode;
 
 namespace API.Controllers.Code
 {
@@ -12,7 +13,7 @@ namespace API.Controllers.Code
 
         }
 
-        public string Decrypt(string base64CipherText, string base64IV)
+        internal string Decrypt(string base64CipherText, string base64IV)
         {
             byte[] cipherBytes = Convert.FromBase64String(base64CipherText);
             byte[] iv = Convert.FromBase64String(base64IV);
@@ -28,6 +29,25 @@ namespace API.Controllers.Code
             using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
             using var reader = new StreamReader(cs);
             return reader.ReadToEnd();
+        }
+
+        internal long GenerateForgotPasswordValidationCode()
+        {
+            var guid = Guid.NewGuid();
+            var baseCode = guid.ToString().Replace("-", string.Empty);
+            var timeStamp = DateTime.UtcNow.Ticks;
+            var validationCode = $"{baseCode}{timeStamp}";
+
+            var validationCodeController = new ValidationCodeController();
+            var validationCodeEntity = validationCodeController.InsertNewAndGetEntity();
+
+            var validationCodeAttributeController = new ValidationCodeAttributeController();
+            var codeAccountSettingAttributeEntity = validationCodeAttributeController.GetActiveEntityByDescription("Code");
+
+            var validationCodeDetailController = new ValidationCodeDetailController();
+            validationCodeDetailController.Insert(validationCodeEntity.Id, codeAccountSettingAttributeEntity.Id, validationCode);
+
+            return validationCodeEntity.Id;
         }
     }
 }

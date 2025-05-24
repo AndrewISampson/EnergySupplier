@@ -12,6 +12,14 @@ namespace API.Controllers.Database.Administration.Table.Login
             databaseController = new DatabaseController();
         }
 
+        internal LoginEntity GetActiveEntityByGuid(Guid guid)
+        {
+            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"Login\" WHERE \"IsActiveRecord\" = '1' AND \"Guid\" = '{guid}'")
+                .Rows.Cast<DataRow>()
+                .Select(d => new LoginEntity(d))
+                .FirstOrDefault();
+        }
+
         internal LoginEntity InsertNewAndGetEntity()
         {
             var guid = Guid.NewGuid();
@@ -25,14 +33,6 @@ namespace API.Controllers.Database.Administration.Table.Login
 
             databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"Login\" (\"CreatedByUserId\", \"Guid\") VALUES (1, '{guid}')");
             return GetActiveEntityByGuid(guid);
-        }
-
-        internal LoginEntity GetActiveEntityByGuid(Guid guid)
-        {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"Login\" WHERE \"IsActiveRecord\" = '1' AND \"Guid\" = '{guid}'")
-                .Rows.Cast<DataRow>()
-                .Select(d => new LoginEntity(d))
-                .FirstOrDefault();
         }
     }
 }

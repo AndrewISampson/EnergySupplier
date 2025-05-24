@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from ui.utils.security import encrypt_aes, AES_SECRET_KEY, get_metadata
-from ui.utils.api import call_api
+from ui.utils.security import encrypt_aes, get_metadata
+from ui.utils.api import call_api, handle_API_error
 
 def broker_login_view(request):
     context = {}
@@ -9,11 +9,10 @@ def broker_login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        remember = request.POST.get('remember')
 
         # Encrypt sensitive fields
-        encrypted_username = encrypt_aes(username, AES_SECRET_KEY)
-        encrypted_password = encrypt_aes(password, AES_SECRET_KEY)
+        encrypted_username = encrypt_aes(username)
+        encrypted_password = encrypt_aes(password)
 
         payload = {
             'Process': '17902a34-9755-4c64-97c9-5deffc2eeba2',
@@ -30,11 +29,10 @@ def broker_login_view(request):
             if result.json().get('authenticated'):
                 return redirect('broker_dashboard')
             else:
-                context['error'] = 'Unable to validate credentials.<br><br>Either the username/password details entered are incorrect or the account has been locked'
+                context['error'] = result.json().get('errorMessage')
                 return render(request, 'broker/broker_login.html', context)
 
         except Exception as e:
-            context['error'] = 'Login failed: API error'
-            return render(request, 'broker/broker_login.html', context)
+            handle_API_error(request, 'broker/broker_login.html', context)
 
     return render(request, 'broker/broker_login.html', context)
