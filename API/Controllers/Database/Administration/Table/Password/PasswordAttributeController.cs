@@ -1,23 +1,30 @@
 ﻿using System.Data;
 using API.Entity.Database.Administration.Table.Password;
+using API.Entity.Database.Administration.Table.User;
 
 namespace API.Controllers.Database.Administration.Table.Password
 {
     public class PasswordAttributeController
     {
-        private readonly DatabaseController databaseController;
+        private readonly DatabaseController _databaseController;
+        private readonly GenericController _genericController;
+
+        private readonly string _selectColumns;
+        private readonly string _schema = "Administration";
+        private readonly string _table = "PasswordAttribute";
 
         public PasswordAttributeController()
         {
-            databaseController = new DatabaseController();
+            _databaseController = new DatabaseController();
+            _genericController = new GenericController();
+
+            _selectColumns = _genericController.GetColumnListFromEntity<PasswordAttributeEntity>();
         }
 
         internal PasswordAttributeEntity GetActiveEntityByDescription(string description)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"PasswordAttribute\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'")
-                .Rows.Cast<DataRow>()
-                .Select(d => new PasswordAttributeEntity(d))
-                .First();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'");
+            return new PasswordAttributeEntity(dataRow);
         }
     }
 }

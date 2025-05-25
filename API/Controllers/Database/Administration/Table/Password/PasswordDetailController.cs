@@ -1,44 +1,47 @@
 ﻿using System.Data;
 using API.Entity.Database.Administration.Table.Password;
+using API.Entity.Database.Administration.Table.User;
 
 namespace API.Controllers.Database.Administration.Table.Password
 {
     public class PasswordDetailController
     {
-        private readonly DatabaseController databaseController;
+        private readonly DatabaseController _databaseController;
+        private readonly GenericController _genericController;
+
+        private readonly string _selectColumns;
+        private readonly string _schema = "Administration";
+        private readonly string _table = "PasswordDetail";
 
         public PasswordDetailController()
         {
-            databaseController = new DatabaseController();
+            _databaseController = new DatabaseController();
+            _genericController = new GenericController();
+
+            _selectColumns = _genericController.GetColumnListFromEntity<PasswordDetailEntity>();
         }
 
         internal PasswordDetailEntity GetActiveEntityByIdAndAttributeId(long id, long attributeId)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"PasswordDetail\" WHERE \"IsActiveRecord\" = '1' AND \"PasswordId\" = {id} AND \"PasswordAttributeId\" = {attributeId}")
-                .Rows.Cast<DataRow>()
-                .Select(d => new PasswordDetailEntity(d))
-                .FirstOrDefault();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"PasswordId\" = {id} AND \"PasswordAttributeId\" = {attributeId}");
+            return new PasswordDetailEntity(dataRow);
         }
 
         internal List<PasswordDetailEntity> GetActiveEntityListByAttributeId(long attributeId)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"PasswordDetail\" WHERE \"IsActiveRecord\" = '1' AND \"PasswordAttributeId\" = {attributeId}")
-                .Rows.Cast<DataRow>()
-                .Select(d => new PasswordDetailEntity(d))
-                .ToList();
+            var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"PasswordAttributeId\" = {attributeId}");
+            return _genericController.PopulateListFromDataRowList(dataRowList, dataRow => new PasswordDetailEntity(dataRow));
         }
 
         internal PasswordDetailEntity GetActiveEntityByAttributeIdAndDescription(long attributeId, string description)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"PasswordDetail\" WHERE \"IsActiveRecord\" = '1'AND \"PasswordAttributeId\" = {attributeId} AND \"Description\" = '{description}' ")
-                .Rows.Cast<DataRow>()
-                .Select(d => new PasswordDetailEntity(d))
-                .FirstOrDefault();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1'AND \"PasswordAttributeId\" = {attributeId} AND \"Description\" = '{description}'");
+            return new PasswordDetailEntity(dataRow);
         }
 
         internal void Insert(long createdByUserId, long id, long attributeId, string description)
         {
-            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"PasswordDetail\" (\"CreatedByUserId\", \"PasswordId\", \"PasswordAttributeId\", \"Description\") VALUES ({createdByUserId}, {id}, {attributeId}, '{description}')");
+            _databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"PasswordDetail\" (\"CreatedByUserId\", \"PasswordId\", \"PasswordAttributeId\", \"Description\") VALUES ({createdByUserId}, {id}, {attributeId}, '{description}')");
         }
     }
 }

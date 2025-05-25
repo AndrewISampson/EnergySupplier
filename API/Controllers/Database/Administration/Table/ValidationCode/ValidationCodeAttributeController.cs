@@ -1,31 +1,36 @@
 ﻿using System.Data;
 using API.Entity.Database.Administration.Table.ValidationCode;
+using API.Entity.Database.Information.Table.Process;
 
 namespace API.Controllers.Database.Administration.Table.ValidationCode
 {
     public class ValidationCodeAttributeController
     {
-        private readonly DatabaseController databaseController;
+        private readonly DatabaseController _databaseController;
+        private readonly GenericController _genericController;
+
+        private readonly string _selectColumns;
+        private readonly string _schema = "Administration";
+        private readonly string _table = "ValidationCodeAttribute";
 
         public ValidationCodeAttributeController()
         {
-            databaseController = new DatabaseController();
+            _databaseController = new DatabaseController();
+            _genericController = new GenericController();
+
+            _selectColumns = _genericController.GetColumnListFromEntity<ValidationCodeAttributeEntity>();
         }
 
         internal ValidationCodeAttributeEntity GetActiveEntityByDescription(string description)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"ValidationCodeAttribute\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'")
-                .Rows.Cast<DataRow>()
-                .Select(d => new ValidationCodeAttributeEntity(d))
-                .First();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'");
+            return new ValidationCodeAttributeEntity(dataRow);
         }
 
         internal List<ValidationCodeAttributeEntity> GetActiveEntityList()
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"ValidationCodeAttribute\" WHERE \"IsActiveRecord\" = '1'")
-                .Rows.Cast<DataRow>()
-                .Select(d => new ValidationCodeAttributeEntity(d))
-                .ToList();
+            var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1'");
+            return _genericController.PopulateListFromDataRowList(dataRowList, dataRow => new ValidationCodeAttributeEntity(dataRow));
         }
     }
 }

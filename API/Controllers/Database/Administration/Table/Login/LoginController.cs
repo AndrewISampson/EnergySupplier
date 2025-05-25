@@ -1,37 +1,42 @@
 ﻿using System.Data;
 using API.Entity.Database.Administration.Table.Login;
+using API.Entity.Database.Administration.Table.Password;
 
 namespace API.Controllers.Database.Administration.Table.Login
 {
     public class LoginController
     {
-        private readonly DatabaseController databaseController;
+        private readonly DatabaseController _databaseController;
+        private readonly GenericController _genericController;
+
+        private readonly string _selectColumns;
+        private readonly string _schema = "Administration";
+        private readonly string _table = "Login";
 
         public LoginController()
         {
-            databaseController = new DatabaseController();
+            _databaseController = new DatabaseController();
+            _genericController = new GenericController();
+
+            _selectColumns = _genericController.GetColumnListFromEntity<LoginEntity>();
         }
 
         internal LoginEntity GetActiveEntityByGuid(Guid guid)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"Login\" WHERE \"IsActiveRecord\" = '1' AND \"Guid\" = '{guid}'")
-                .Rows.Cast<DataRow>()
-                .Select(d => new LoginEntity(d))
-                .FirstOrDefault();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Guid\" = '{guid}'");
+            return new LoginEntity(dataRow);
         }
 
-        internal LoginEntity InsertNewAndGetEntity()
+        internal LoginEntity InsertNewAndGetEntity(long createdByUserId)
         {
             var guid = Guid.NewGuid();
-            var loginEntity = GetActiveEntityByGuid(guid);
 
-            while (loginEntity != null)
+            while (GetActiveEntityByGuid(guid) != null)
             {
                 guid = Guid.NewGuid();
-                loginEntity = GetActiveEntityByGuid(guid);
             }
 
-            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"Login\" (\"CreatedByUserId\", \"Guid\") VALUES (1, '{guid}')");
+            _databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"Login\" (\"CreatedByUserId\", \"Guid\") VALUES ({createdByUserId}, '{guid}')");
             return GetActiveEntityByGuid(guid);
         }
     }

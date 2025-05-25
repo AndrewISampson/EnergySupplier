@@ -1,44 +1,47 @@
 ﻿using System.Data;
 using API.Entity.Database.Administration.Table.User;
+using API.Entity.Database.Administration.Table.ValidationCode;
 
 namespace API.Controllers.Database.Administration.Table.User
 {
     public class UserDetailController
     {
-        private readonly DatabaseController databaseController;
+        private readonly DatabaseController _databaseController;
+        private readonly GenericController _genericController;
+
+        private readonly string _selectColumns;
+        private readonly string _schema = "Administration";
+        private readonly string _table = "UserDetail";
 
         public UserDetailController()
         {
-            databaseController = new DatabaseController();
+            _databaseController = new DatabaseController();
+            _genericController = new GenericController();
+
+            _selectColumns = _genericController.GetColumnListFromEntity<UserDetailEntity>();
         }
 
         internal UserDetailEntity GetActiveEntityByIdAndAttributeId(long id, long attributeId)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"UserDetail\" WHERE \"IsActiveRecord\" = '1' AND \"UserId\" = {id} AND \"UserAttributeId\" = {attributeId}")
-                .Rows.Cast<DataRow>()
-                .Select(d => new UserDetailEntity(d))
-                .FirstOrDefault();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"UserId\" = {id} AND \"UserAttributeId\" = {attributeId}");
+            return new UserDetailEntity(dataRow);
         }
 
         internal List<UserDetailEntity> GetActiveEntityListByIdAndAttributeId(long id, long attributeId)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"UserDetail\" WHERE \"IsActiveRecord\" = '1' AND \"UserId\" = {id} AND \"UserAttributeId\" = {attributeId}")
-                .Rows.Cast<DataRow>()
-                .Select(d => new UserDetailEntity(d))
-                .ToList();
+            var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"UserId\" = {id} AND \"UserAttributeId\" = {attributeId}");
+            return _genericController.PopulateListFromDataRowList(dataRowList, dataRow => new UserDetailEntity(dataRow));
         }
 
         internal UserDetailEntity GetActiveEntityByAttributeIdAndDescription(long attributeId, string description)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"UserDetail\" WHERE \"IsActiveRecord\" = '1'AND \"UserAttributeId\" = {attributeId} AND \"Description\" = '{description}' ")
-                .Rows.Cast<DataRow>()
-                .Select(d => new UserDetailEntity(d))
-                .FirstOrDefault();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1'AND \"UserAttributeId\" = {attributeId} AND \"Description\" = '{description}'");
+            return new UserDetailEntity(dataRow);
         }
 
-        internal void Insert(long id, long attributeId, string description)
+        internal void Insert(long createdByUserId, long id, long attributeId, string description)
         {
-            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"UserDetail\" (\"CreatedByUserId\", \"UserId\", \"UserAttributeId\", \"Description\") VALUES (1, {id}, {attributeId}, '{description}')");
+            _databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"UserDetail\" (\"CreatedByUserId\", \"UserId\", \"UserAttributeId\", \"Description\") VALUES ({createdByUserId}, {id}, {attributeId}, '{description}')");
         }
     }
 }

@@ -67,10 +67,10 @@ namespace API.Controllers.Code.BrokerLogin
                     return Ok(new { valid = true, message = forgotPasswordValidationCodeSentMessageValueSettingDetailEntity.Description });
                 }
 
-                var validationCodeId = _securityController.GenerateForgotPasswordValidationCode();
+                var validationCodeId = _securityController.GenerateForgotPasswordValidationCode(emailAddressUserDetailEntity.UserId);
 
                 var administration_User_To_Administration_ValidationCodeController = new Administration_User_To_Administration_ValidationCodeController();
-                administration_User_To_Administration_ValidationCodeController.Insert(emailAddressUserDetailEntity.UserId, validationCodeId);
+                administration_User_To_Administration_ValidationCodeController.Insert(emailAddressUserDetailEntity.UserId, emailAddressUserDetailEntity.UserId, validationCodeId);
 
                 /*
                  * SEND EMAIL!
@@ -189,7 +189,7 @@ namespace API.Controllers.Code.BrokerLogin
                 if (passwordId == 0)
                 {
                     var passwordController = new PasswordController();
-                    var passwordEntity = passwordController.InsertNewAndGetEntity();
+                    var passwordEntity = passwordController.InsertNewAndGetEntity(emailAddressUserDetailEntity.UserId);
                     passwordId = passwordEntity.Id;
 
                     passwordDetailController.Insert(emailAddressUserDetailEntity.UserId, passwordId, base64CipherTextPasswordAttributeEntity.Id, processBrokerForgotPasswordEntity.Password);
@@ -199,7 +199,7 @@ namespace API.Controllers.Code.BrokerLogin
                 var administration_Password_To_Administration_UserController = new Administration_Password_To_Administration_UserController();
                 var administration_Password_To_Administration_UserEntity = administration_Password_To_Administration_UserController.GetActiveEntityByUserId(emailAddressUserDetailEntity.UserId);
 
-                if(administration_Password_To_Administration_UserEntity != null)
+                if (administration_Password_To_Administration_UserEntity != null)
                 {
                     administration_Password_To_Administration_UserController.UpdateEffectiveToDateTime(administration_Password_To_Administration_UserEntity.Id, emailAddressUserDetailEntity.UserId);
                 }

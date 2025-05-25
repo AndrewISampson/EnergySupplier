@@ -1,23 +1,30 @@
 ﻿using System.Data;
 using API.Entity.Database.Information.Table.Process;
+using API.Entity.Database.Information.Table.Setting;
 
 namespace API.Controllers.Database.Information.Table.Process
 {
     public class ProcessAttributeController
     {
-        private readonly DatabaseController databaseController;
+        private readonly DatabaseController _databaseController;
+        private readonly GenericController _genericController;
+
+        private readonly string _selectColumns;
+        private readonly string _schema = "Information";
+        private readonly string _table = "ProcessAttribute";
 
         public ProcessAttributeController()
         {
-            databaseController = new DatabaseController();
+            _databaseController = new DatabaseController();
+            _genericController = new GenericController();
+
+            _selectColumns = _genericController.GetColumnListFromEntity<ProcessAttributeEntity>();
         }
 
         internal ProcessAttributeEntity GetActiveEntityByDescription(string description)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Information\".\"ProcessAttribute\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'")
-                .Rows.Cast<DataRow>()
-                .Select(d => new ProcessAttributeEntity(d))
-                .FirstOrDefault();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'");
+            return new ProcessAttributeEntity(dataRow);
         }
     }
 }

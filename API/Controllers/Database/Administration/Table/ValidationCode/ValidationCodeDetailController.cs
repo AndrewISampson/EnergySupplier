@@ -1,41 +1,46 @@
 ﻿using System.Data;
 using API.Entity.Database.Administration.Table.ValidationCode;
+using API.Entity.Database.Information.Table.Process;
 
 namespace API.Controllers.Database.Administration.Table.ValidationCode
 {
     public class ValidationCodeDetailController
     {
-        private readonly DatabaseController databaseController;
+        private readonly DatabaseController _databaseController;
+        private readonly GenericController _genericController;
+
+        private readonly string _selectColumns;
+        private readonly string _schema = "Administration";
+        private readonly string _table = "ValidationCodeDetail";
 
         public ValidationCodeDetailController()
         {
-            databaseController = new DatabaseController();
+            _databaseController = new DatabaseController();
+            _genericController = new GenericController();
+
+            _selectColumns = _genericController.GetColumnListFromEntity<ValidationCodeDetailEntity>();
         }
 
         internal ValidationCodeDetailEntity GetActiveEntityByIdAndAttributeId(long id, long attributeId)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"ValidationCodeDetail\" WHERE \"IsActiveRecord\" = '1' AND \"ValidationCodeId\" = {id} AND \"ValidationCodeAttributeId\" = {attributeId}")
-                .Rows.Cast<DataRow>()
-                .Select(d => new ValidationCodeDetailEntity(d))
-                .First();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"ValidationCodeId\" = {id} AND \"ValidationCodeAttributeId\" = {attributeId}");
+            return new ValidationCodeDetailEntity(dataRow);
         }
 
         internal ValidationCodeDetailEntity GetActiveEntityByAttributeIdAndDescription(long attributeId, string description)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"ValidationCodeDetail\" WHERE \"IsActiveRecord\" = '1'AND \"ValidationCodeAttributeId\" = {attributeId} AND \"Description\" = '{description}' ")
-                .Rows.Cast<DataRow>()
-                .Select(d => new ValidationCodeDetailEntity(d))
-                .FirstOrDefault();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1'AND \"ValidationCodeAttributeId\" = {attributeId} AND \"Description\" = '{description}'");
+            return new ValidationCodeDetailEntity(dataRow);
         }
 
-        internal void BulkInsert(List<ValidationCodeDetailEntity> ValidationCodeDetailEntityList)
+        internal void BulkInsert(long createdByUserId, List<ValidationCodeDetailEntity> ValidationCodeDetailEntityList)
         {
-            ValidationCodeDetailEntityList.ForEach(l => Insert(l.ValidationCodeId, l.ValidationCodeAttributeId, l.Description));
+            ValidationCodeDetailEntityList.ForEach(l => Insert(createdByUserId, l.ValidationCodeId, l.ValidationCodeAttributeId, l.Description));
         }
 
-        internal void Insert(long id, long attributeId, string description)
+        internal void Insert(long createdByUserId, long id, long attributeId, string description)
         {
-            databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"ValidationCodeDetail\" (\"CreatedByUserId\", \"ValidationCodeId\", \"ValidationCodeAttributeId\", \"Description\") VALUES (1, {id}, {attributeId}, '{description}')");
+            _databaseController.ExecuteScalar($"INSERT INTO \"{_schema}\".\"{_table}\" (\"CreatedByUserId\", \"ValidationCodeId\", \"ValidationCodeAttributeId\", \"Description\") VALUES ({createdByUserId}, {id}, {attributeId}, '{description}')");
         }
     }
 }

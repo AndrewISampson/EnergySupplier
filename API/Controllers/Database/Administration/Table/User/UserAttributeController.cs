@@ -1,23 +1,30 @@
 ﻿using System.Data;
 using API.Entity.Database.Administration.Table.User;
+using API.Entity.Database.Administration.Table.ValidationCode;
 
 namespace API.Controllers.Database.Administration.Table.User
 {
     public class UserAttributeController
     {
-        private readonly DatabaseController databaseController;
+        private readonly DatabaseController _databaseController;
+        private readonly GenericController _genericController;
+
+        private readonly string _selectColumns;
+        private readonly string _schema = "Administration";
+        private readonly string _table = "UserAttribute";
 
         public UserAttributeController()
         {
-            databaseController = new DatabaseController();
+            _databaseController = new DatabaseController();
+            _genericController = new GenericController();
+
+            _selectColumns = _genericController.GetColumnListFromEntity<UserAttributeEntity>();
         }
 
         internal UserAttributeEntity GetActiveEntityByDescription(string description)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"UserAttribute\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'")
-                .Rows.Cast<DataRow>()
-                .Select(d => new UserAttributeEntity(d))
-                .First();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'");
+            return new UserAttributeEntity(dataRow);
         }
     }
 }

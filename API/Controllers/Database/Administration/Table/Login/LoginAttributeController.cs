@@ -1,31 +1,37 @@
 ﻿using System.Data;
 using API.Entity.Database.Administration.Table.Login;
+using API.Entity.Database.Administration.Table.Password;
+using API.Entity.Database.Administration.Table.ValidationCode;
 
 namespace API.Controllers.Database.Administration.Table.Login
 {
     public class LoginAttributeController
     {
-        private readonly DatabaseController databaseController;
+        private readonly DatabaseController _databaseController;
+        private readonly GenericController _genericController;
+
+        private readonly string _selectColumns;
+        private readonly string _schema = "Administration";
+        private readonly string _table = "PasswordAttribute";
 
         public LoginAttributeController()
         {
-            databaseController = new DatabaseController();
+            _databaseController = new DatabaseController();
+            _genericController = new GenericController();
+
+            _selectColumns = _genericController.GetColumnListFromEntity<PasswordAttributeEntity>();
         }
 
         internal LoginAttributeEntity GetActiveEntityByDescription(string description)
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"LoginAttribute\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'")
-                .Rows.Cast<DataRow>()
-                .Select(d => new LoginAttributeEntity(d))
-                .First();
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'");
+            return new LoginAttributeEntity(dataRow);
         }
 
         internal List<LoginAttributeEntity> GetActiveEntityList()
         {
-            return databaseController.GetDataTable($"SELECT * FROM \"Administration\".\"LoginAttribute\" WHERE \"IsActiveRecord\" = '1'")
-                .Rows.Cast<DataRow>()
-                .Select(d => new LoginAttributeEntity(d))
-                .ToList();
+            var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1'");
+            return _genericController.PopulateListFromDataRowList(dataRowList, dataRow => new LoginAttributeEntity(dataRow));
         }
     }
 }

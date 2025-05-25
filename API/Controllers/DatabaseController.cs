@@ -11,6 +11,21 @@ namespace API.Controllers
         {
         }
 
+        internal DataRow GetFirstOrDefault(string SQL)
+        {
+            return GetDataTable(SQL).Rows.Cast<DataRow>().FirstOrDefault();
+        }
+
+        internal DataRow GetFirst(string SQL)
+        {
+            return GetDataTable(SQL).Rows.Cast<DataRow>().First();
+        }
+
+        internal List<DataRow> GetList(string SQL)
+        {
+            return GetDataTable(SQL).Rows.Cast<DataRow>().ToList();
+        }
+
         internal DataTable GetDataTable(string SQL)
         {
             var dataTable = new DataTable();

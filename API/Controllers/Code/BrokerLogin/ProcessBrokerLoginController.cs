@@ -49,8 +49,21 @@ namespace API.Controllers.Code.BrokerLogin
             {
                 var processBrokerLoginEntity = JsonConvert.DeserializeObject<ProcessBrokerLoginEntity>(json.ToString());
 
+                var securityController = new SecurityController();
+                var decryptedUsername = securityController.Decrypt(processBrokerLoginEntity.Username, processBrokerLoginEntity.iv_username);
+
+                var userAttributeController = new UserAttributeController();
+                var nameUserAttributeEntity = userAttributeController.GetActiveEntityByDescription("Name");
+                var emailAddressUserAttributeEntity = userAttributeController.GetActiveEntityByDescription("Email Address");
+
+                var userDetailController = new UserDetailController();
+                var invalidLoginUserUserDetailEntity = userDetailController.GetActiveEntityByAttributeIdAndDescription(nameUserAttributeEntity.Id, "Invalid Login User");
+                var emailAddressUserDetailEntity = userDetailController.GetActiveEntityByAttributeIdAndDescription(emailAddressUserAttributeEntity.Id, decryptedUsername);
+
+                var createdByUserId = emailAddressUserDetailEntity?.UserId ?? invalidLoginUserUserDetailEntity.UserId;
+
                 var loginController = new LoginController();
-                var loginEntity = loginController.InsertNewAndGetEntity();
+                var loginEntity = loginController.InsertNewAndGetEntity(createdByUserId);
 
                 var loginAttributeController = new LoginAttributeController();
                 var loginAttributeDescriptionToIdDictionary = loginAttributeController.GetActiveEntityList().ToDictionary
@@ -77,20 +90,11 @@ namespace API.Controllers.Code.BrokerLogin
             };
                 loginDetailEntityList.ForEach(l => l.LoginId = loginEntity.Id);
 
-                _loginDetailController.BulkInsert(loginDetailEntityList);
-
-                var securityController = new SecurityController();
-                var decryptedUsername = securityController.Decrypt(processBrokerLoginEntity.Username, processBrokerLoginEntity.iv_username);
-
-                var userAttributeController = new UserAttributeController();
-                var emailAddressUserAttributeEntity = userAttributeController.GetActiveEntityByDescription("Email Address");
-
-                var userDetailController = new UserDetailController();
-                var emailAddressUserDetailEntity = userDetailController.GetActiveEntityByAttributeIdAndDescription(emailAddressUserAttributeEntity.Id, decryptedUsername);
+                _loginDetailController.BulkInsert(createdByUserId, loginDetailEntityList);
 
                 if (emailAddressUserDetailEntity == null)
                 {
-                    LogLoginFailureAndCheckAccountLock(loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Email Address not found", 0);
+                    LogLoginFailureAndCheckAccountLock(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Email Address not found", 0);
                     return LoginFailureResult();
                 }
 
@@ -99,7 +103,7 @@ namespace API.Controllers.Code.BrokerLogin
 
                 if (isAccountLockedUserDetailEntity != null)
                 {
-                    LogLoginFailureAndCheckAccountLock(loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account is locked", emailAddressUserDetailEntity.UserId);
+                    LogLoginFailureAndCheckAccountLock(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account is locked", emailAddressUserDetailEntity.UserId);
                     return LoginFailureResult();
                 }
 
@@ -109,7 +113,7 @@ namespace API.Controllers.Code.BrokerLogin
                 if (!roleUserDetailEntityList.Select(u => u.Description).Contains("Broker")
                     && !roleUserDetailEntityList.Select(u => u.Description).Contains("Internal"))
                 {
-                    LogLoginFailureAndCheckAccountLock(loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account is neither broker nor internal", emailAddressUserDetailEntity.UserId);
+                    LogLoginFailureAndCheckAccountLock(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account is neither broker nor internal", emailAddressUserDetailEntity.UserId);
                     return LoginFailureResult();
                 }
 
@@ -118,7 +122,7 @@ namespace API.Controllers.Code.BrokerLogin
 
                 if (administration_Password_To_Administration_UserEntity == null)
                 {
-                    LogLoginFailureAndCheckAccountLock(loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account has no password", emailAddressUserDetailEntity.UserId);
+                    LogLoginFailureAndCheckAccountLock(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account has no password", emailAddressUserDetailEntity.UserId);
                     return LoginFailureResult();
                 }
 
@@ -137,13 +141,13 @@ namespace API.Controllers.Code.BrokerLogin
 
                 if (decryptedExistingPassword != decryptedPassword)
                 {
-                    LogLoginFailureAndCheckAccountLock(loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Incorrect password", emailAddressUserDetailEntity.UserId);
+                    LogLoginFailureAndCheckAccountLock(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Incorrect password", emailAddressUserDetailEntity.UserId);
                     return LoginFailureResult();
                 }
 
                 var administration_Login_To_Administration_UserController = new Administration_Login_To_Administration_UserController();
-                administration_Login_To_Administration_UserController.Insert(loginEntity.Id, emailAddressUserDetailEntity.UserId);
-                _loginDetailController.Insert(loginEntity.Id, loginAttributeDescriptionToIdDictionary["Login Result"], "Success");
+                administration_Login_To_Administration_UserController.Insert(emailAddressUserDetailEntity.UserId, loginEntity.Id, emailAddressUserDetailEntity.UserId);
+                _loginDetailController.Insert(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary["Login Result"], "Success");
                 return Ok(new { authenticated = true });
             }
             catch (Exception)
@@ -152,15 +156,15 @@ namespace API.Controllers.Code.BrokerLogin
             }
         }
 
-        private void LogLoginFailureAndCheckAccountLock(long loginId, Dictionary<string, long> loginAttributeDescriptionToIdDictionary, string failureReason, long userId)
+        private void LogLoginFailureAndCheckAccountLock(long createdByUserId, long loginId, Dictionary<string, long> loginAttributeDescriptionToIdDictionary, string failureReason, long userId)
         {
-            _loginDetailController.Insert(loginId, loginAttributeDescriptionToIdDictionary["Login Result"], "Failed");
-            _loginDetailController.Insert(loginId, loginAttributeDescriptionToIdDictionary["Login Failure Reason"], failureReason);
+            _loginDetailController.Insert(createdByUserId, loginId, loginAttributeDescriptionToIdDictionary["Login Result"], "Failed");
+            _loginDetailController.Insert(createdByUserId, loginId, loginAttributeDescriptionToIdDictionary["Login Failure Reason"], failureReason);
 
             if (userId != 0)
             {
                 var administration_Login_To_Administration_UserController = new Administration_Login_To_Administration_UserController();
-                administration_Login_To_Administration_UserController.Insert(loginId, userId);
+                administration_Login_To_Administration_UserController.Insert(userId, loginId, userId);
 
                 if (failureReason == "Account is locked")
                 {
@@ -191,7 +195,7 @@ namespace API.Controllers.Code.BrokerLogin
                     var isAccountLockedUserAttributeEntity = userAttributeController.GetActiveEntityByDescription("Is Account Locked?");
 
                     var userDetailController = new UserDetailController();
-                    userDetailController.Insert(userId, isAccountLockedUserAttributeEntity.Id, "1");
+                    userDetailController.Insert(userId, userId, isAccountLockedUserAttributeEntity.Id, "1");
                 }
             }
         }

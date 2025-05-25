@@ -31,7 +31,7 @@ namespace API.Controllers.Code
             return reader.ReadToEnd();
         }
 
-        internal long GenerateForgotPasswordValidationCode()
+        internal long GenerateForgotPasswordValidationCode(long userId)
         {
             var guid = Guid.NewGuid();
             var baseCode = guid.ToString().Replace("-", string.Empty);
@@ -39,13 +39,13 @@ namespace API.Controllers.Code
             var validationCode = $"{baseCode}{timeStamp}";
 
             var validationCodeController = new ValidationCodeController();
-            var validationCodeEntity = validationCodeController.InsertNewAndGetEntity();
+            var validationCodeEntity = validationCodeController.InsertNewAndGetEntity(userId);
 
             var validationCodeAttributeController = new ValidationCodeAttributeController();
             var codeAccountSettingAttributeEntity = validationCodeAttributeController.GetActiveEntityByDescription("Code");
 
             var validationCodeDetailController = new ValidationCodeDetailController();
-            validationCodeDetailController.Insert(validationCodeEntity.Id, codeAccountSettingAttributeEntity.Id, validationCode);
+            validationCodeDetailController.Insert(userId, validationCodeEntity.Id, codeAccountSettingAttributeEntity.Id, validationCode);
 
             return validationCodeEntity.Id;
         }
