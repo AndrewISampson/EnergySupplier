@@ -1,6 +1,4 @@
-﻿using System.Data;
-using API.Entity.Database.Administration.Table.User;
-using API.Entity.Database.Administration.Table.ValidationCode;
+﻿using API.Entity.Database.Administration.Table.User;
 
 namespace API.Controllers.Database.Administration.Table.User
 {

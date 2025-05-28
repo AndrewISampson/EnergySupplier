@@ -1,6 +1,4 @@
-﻿using System.Data;
-using API.Entity.Database.Information.Table.Process;
-using API.Entity.Database.Information.Table.Setting;
+﻿using API.Entity.Database.Information.Table.Process;
 
 namespace API.Controllers.Database.Information.Table.Process
 {

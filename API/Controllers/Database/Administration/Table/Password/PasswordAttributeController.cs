@@ -1,6 +1,4 @@
-﻿using System.Data;
-using API.Entity.Database.Administration.Table.Password;
-using API.Entity.Database.Administration.Table.User;
+﻿using API.Entity.Database.Administration.Table.Password;
 
 namespace API.Controllers.Database.Administration.Table.Password
 {

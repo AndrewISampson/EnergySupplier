@@ -1,6 +1,4 @@
-﻿using System.Data;
-using API.Entity.Database.Administration.Table.ValidationCode;
-using API.Entity.Database.Information.Table.Process;
+﻿using API.Entity.Database.Administration.Table.ValidationCode;
 
 namespace API.Controllers.Database.Administration.Table.ValidationCode
 {

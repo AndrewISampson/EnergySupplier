@@ -1,6 +1,4 @@
-﻿using System.Data;
-using API.Entity.Database.Administration.Table.Password;
-using API.Entity.Database.Administration.Table.User;
+﻿using API.Entity.Database.Administration.Table.Password;
 
 namespace API.Controllers.Database.Administration.Table.Password
 {
@@ -31,7 +29,7 @@ namespace API.Controllers.Database.Administration.Table.Password
         {
             var guid = Guid.NewGuid();
 
-            while (GetActiveEntityByGuid(guid) != null)
+            while (GetActiveEntityByGuid(guid).Id != 0)
             {
                 guid = Guid.NewGuid();
             }

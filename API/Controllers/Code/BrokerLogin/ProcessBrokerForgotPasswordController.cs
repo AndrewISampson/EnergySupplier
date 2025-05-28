@@ -62,7 +62,7 @@ namespace API.Controllers.Code.BrokerLogin
                 var forgotPasswordValidationCodeSentMessageNameSettingDetailEntity = _settingDetailController.GetActiveEntityByAttributeIdAndDescription(_nameAccountSettingAttributeEntity.Id, "Forgot Password Validation Code Sent Message");
                 var forgotPasswordValidationCodeSentMessageValueSettingDetailEntity = _settingDetailController.GetActiveEntityByIdAndAttributeId(forgotPasswordValidationCodeSentMessageNameSettingDetailEntity.SettingId, _valueAccountSettingAttributeEntity.Id);
 
-                if (emailAddressUserDetailEntity == null)
+                if (emailAddressUserDetailEntity.Id == 0)
                 {
                     return Ok(new { valid = true, message = forgotPasswordValidationCodeSentMessageValueSettingDetailEntity.Description });
                 }
@@ -93,7 +93,7 @@ namespace API.Controllers.Code.BrokerLogin
                 var forgotPasswordInvalidValidationCodeMessageNameSettingDetailEntity = _settingDetailController.GetActiveEntityByAttributeIdAndDescription(_nameAccountSettingAttributeEntity.Id, "Forgot Password Invalid Validation Code Message");
                 var forgotPasswordInvalidValidationCodeMessageValueSettingDetailEntity = _settingDetailController.GetActiveEntityByIdAndAttributeId(forgotPasswordInvalidValidationCodeMessageNameSettingDetailEntity.SettingId, _valueAccountSettingAttributeEntity.Id);
 
-                if (emailAddressUserDetailEntity == null)
+                if (emailAddressUserDetailEntity.Id == 0)
                 {
                     return Ok(new { valid = false, message = forgotPasswordInvalidValidationCodeMessageValueSettingDetailEntity.Description });
                 }
@@ -106,7 +106,7 @@ namespace API.Controllers.Code.BrokerLogin
                 var validationCodeDetailController = new ValidationCodeDetailController();
                 var codeValidationCodeDetailEntity = validationCodeDetailController.GetActiveEntityByAttributeIdAndDescription(codeValidationCodeAttributeEntity.Id, decryptedValidationCode);
 
-                if (codeValidationCodeDetailEntity == null)
+                if (codeValidationCodeDetailEntity.Id == 0)
                 {
                     return Ok(new { valid = false, message = forgotPasswordInvalidValidationCodeMessageValueSettingDetailEntity.Description });
                 }
@@ -114,7 +114,7 @@ namespace API.Controllers.Code.BrokerLogin
                 var administration_User_To_Administration_ValidationCodeController = new Administration_User_To_Administration_ValidationCodeController();
                 var administration_User_To_Administration_ValidationCodeEntity = administration_User_To_Administration_ValidationCodeController.GetActiveEntityByUserIdAndValidationCodeId(emailAddressUserDetailEntity.UserId, codeValidationCodeDetailEntity.ValidationCodeId);
 
-                if (administration_User_To_Administration_ValidationCodeEntity == null)
+                if (administration_User_To_Administration_ValidationCodeEntity.Id == 0)
                 {
                     return Ok(new { valid = false, message = forgotPasswordInvalidValidationCodeMessageValueSettingDetailEntity.Description });
                 }
@@ -136,7 +136,7 @@ namespace API.Controllers.Code.BrokerLogin
                 var invalidNewPasswordMessageNameSettingDetailEntity = _settingDetailController.GetActiveEntityByAttributeIdAndDescription(_nameAccountSettingAttributeEntity.Id, "Invalid New Password Message");
                 var invalidNewPasswordMessageValueSettingDetailEntity = _settingDetailController.GetActiveEntityByIdAndAttributeId(invalidNewPasswordMessageNameSettingDetailEntity.SettingId, _valueAccountSettingAttributeEntity.Id);
 
-                if (emailAddressUserDetailEntity == null)
+                if (emailAddressUserDetailEntity.Id == 0)
                 {
                     return Ok(new { valid = false, message = invalidNewPasswordMessageValueSettingDetailEntity.Description });
                 }
@@ -199,7 +199,7 @@ namespace API.Controllers.Code.BrokerLogin
                 var administration_Password_To_Administration_UserController = new Administration_Password_To_Administration_UserController();
                 var administration_Password_To_Administration_UserEntity = administration_Password_To_Administration_UserController.GetActiveEntityByUserId(emailAddressUserDetailEntity.UserId);
 
-                if (administration_Password_To_Administration_UserEntity != null)
+                if (administration_Password_To_Administration_UserEntity.Id != 0)
                 {
                     administration_Password_To_Administration_UserController.UpdateEffectiveToDateTime(administration_Password_To_Administration_UserEntity.Id, emailAddressUserDetailEntity.UserId);
                 }

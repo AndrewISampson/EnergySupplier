@@ -101,7 +101,7 @@ namespace API.Controllers.Code.BrokerLogin
                 var isAccountLockedUserAttributeEntity = userAttributeController.GetActiveEntityByDescription("Is Account Locked?");
                 var isAccountLockedUserDetailEntity = userDetailController.GetActiveEntityByIdAndAttributeId(emailAddressUserDetailEntity.UserId, isAccountLockedUserAttributeEntity.Id);
 
-                if (isAccountLockedUserDetailEntity != null)
+                if (isAccountLockedUserDetailEntity.Id != 0)
                 {
                     LogLoginFailureAndCheckAccountLock(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account is locked", emailAddressUserDetailEntity.UserId);
                     return LoginFailureResult();
@@ -120,7 +120,7 @@ namespace API.Controllers.Code.BrokerLogin
                 var administration_Password_To_Administration_UserController = new Administration_Password_To_Administration_UserController();
                 var administration_Password_To_Administration_UserEntity = administration_Password_To_Administration_UserController.GetActiveEntityByUserId(emailAddressUserDetailEntity.UserId);
 
-                if (administration_Password_To_Administration_UserEntity == null)
+                if (administration_Password_To_Administration_UserEntity.Id == 0)
                 {
                     LogLoginFailureAndCheckAccountLock(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account has no password", emailAddressUserDetailEntity.UserId);
                     return LoginFailureResult();

@@ -1,7 +1,5 @@
-﻿using System.Data;
-using API.Entity.Database.Administration.Table.Login;
+﻿using API.Entity.Database.Administration.Table.Login;
 using API.Entity.Database.Administration.Table.Password;
-using API.Entity.Database.Administration.Table.ValidationCode;
 
 namespace API.Controllers.Database.Administration.Table.Login
 {
@@ -12,7 +10,7 @@ namespace API.Controllers.Database.Administration.Table.Login
 
         private readonly string _selectColumns;
         private readonly string _schema = "Administration";
-        private readonly string _table = "PasswordAttribute";
+        private readonly string _table = "LoginAttribute";
 
         public LoginAttributeController()
         {
