@@ -1,3 +1,5 @@
+import datetime
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from ui.utils.security import encrypt_aes, get_metadata
 from ui.utils.api import call_api, handle_API_error
@@ -5,6 +7,11 @@ from ui.utils.api import call_api, handle_API_error
 def broker_login_view(request):
     context = {}
     context['hide_nav'] = True
+    request.session['last_activity'] = datetime.datetime.utcnow().isoformat()
+
+    if 'inactivity_message' in request.session:
+        messages.warning(request, request.session['inactivity_message'])
+        del request.session['inactivity_message']
 
     if request.method == 'POST':
         username = request.POST['username']
@@ -25,6 +32,7 @@ def broker_login_view(request):
 
         try:
             result = call_api(payload)
+            request.session['last_activity'] = datetime.datetime.utcnow().isoformat()
 
             if result.json().get('authenticated'):
                 return redirect('broker_dashboard')
