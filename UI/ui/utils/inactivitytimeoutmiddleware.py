@@ -39,7 +39,7 @@ class InactivityTimeoutMiddleware:
                 elif path.startswith('/internal/'):
                     return redirect('internal_login')
                 else:
-                    return redirect('master')  # default login
+                    return redirect('master')
 
         # Update activity timestamp
         request.session['last_activity'] = now.isoformat()

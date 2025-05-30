@@ -19,7 +19,19 @@ namespace API.Controllers.Database.Administration.Table.Password
             _selectColumns = _genericController.GetColumnListFromEntity<PasswordEntity>();
         }
 
+        internal PasswordEntity GetActiveEntityById(long id)
+        {
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Id\" = {id}");
+            return new PasswordEntity(dataRow);
+        }
+
         internal PasswordEntity GetActiveEntityByGuid(Guid guid)
+        {
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Guid\" = '{guid}'");
+            return new PasswordEntity(dataRow);
+        }
+
+        internal PasswordEntity GetActiveEntityByGuid(string guid)
         {
             var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Guid\" = '{guid}'");
             return new PasswordEntity(dataRow);

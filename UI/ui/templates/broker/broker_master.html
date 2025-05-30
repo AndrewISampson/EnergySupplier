@@ -1,29 +1,4 @@
 {% extends "master.html" %}
-
-{% block navbar %}
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'broker_dashboard' %}">Dashboard</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'broker_customer' %}">Customers</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'broker_commission' %}">Commissions</a>
-    </li>
-  </ul>
-
-  <ul class="navbar-nav ms-auto">
-    <li class="nav-item">
-      <form method="POST" action="{% url 'logout' 'broker' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-outline-danger nav-link border-0 bg-transparent">
-          Logout
-        </button>
-      </form>
-    </li>
-  </ul>
-{% endblock %}
   
 {% block content %}
 {% endblock %}

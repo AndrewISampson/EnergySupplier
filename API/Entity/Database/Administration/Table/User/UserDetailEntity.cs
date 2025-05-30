@@ -17,7 +17,7 @@ namespace API.Entity.Database.Administration.Table.User
 
         public UserDetailEntity(DataRow dataRow)
         {
-            if(dataRow == null)
+            if (dataRow == null)
             {
                 return;
             }

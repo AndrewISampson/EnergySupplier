@@ -73,21 +73,21 @@ namespace API.Controllers.Code.BrokerLogin
                     );
 
                 var loginDetailEntityList = new List<LoginDetailEntity>
-            {
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Username"], Description = processBrokerLoginEntity.Username },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Password"], Description = processBrokerLoginEntity.Password },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["IV Username"], Description = processBrokerLoginEntity.iv_username },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["IV Password"], Description = processBrokerLoginEntity.iv_password },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Browser"], Description = processBrokerLoginEntity.client_metadata.browser },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["IP Address"], Description = processBrokerLoginEntity.client_metadata.ip_address },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Accept Language"], Description = processBrokerLoginEntity.client_metadata.accept_language },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Referer"], Description = processBrokerLoginEntity.client_metadata.referer },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Host"], Description = processBrokerLoginEntity.client_metadata.host },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Request Method"], Description = processBrokerLoginEntity.client_metadata.request_method },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Query String"], Description = processBrokerLoginEntity.client_metadata.query_string },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Session Key"], Description = processBrokerLoginEntity.client_metadata.session_key == null ? "" : processBrokerLoginEntity.client_metadata.session_key.ToString() },
-                new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["CSRF Token"], Description = processBrokerLoginEntity.client_metadata.cookies.csrftoken },
-            };
+                {
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Username"], Description = processBrokerLoginEntity.Username },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Password"], Description = processBrokerLoginEntity.Password },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["IV Username"], Description = processBrokerLoginEntity.iv_username },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["IV Password"], Description = processBrokerLoginEntity.iv_password },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Browser"], Description = processBrokerLoginEntity.client_metadata.browser },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["IP Address"], Description = processBrokerLoginEntity.client_metadata.ip_address },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Accept Language"], Description = processBrokerLoginEntity.client_metadata.accept_language },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Referer"], Description = processBrokerLoginEntity.client_metadata.referer },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Host"], Description = processBrokerLoginEntity.client_metadata.host },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Request Method"], Description = processBrokerLoginEntity.client_metadata.request_method },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Query String"], Description = processBrokerLoginEntity.client_metadata.query_string },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["Session Key"], Description = processBrokerLoginEntity.client_metadata.session_key == null ? "" : processBrokerLoginEntity.client_metadata.session_key.ToString() },
+                    new() { LoginAttributeId = loginAttributeDescriptionToIdDictionary["CSRF Token"], Description = processBrokerLoginEntity.client_metadata.cookies.csrftoken },
+                };
                 loginDetailEntityList.ForEach(l => l.LoginId = loginEntity.Id);
 
                 _loginDetailController.BulkInsert(createdByUserId, loginDetailEntityList);
@@ -148,7 +148,20 @@ namespace API.Controllers.Code.BrokerLogin
                 var administration_Login_To_Administration_UserController = new Administration_Login_To_Administration_UserController();
                 administration_Login_To_Administration_UserController.Insert(emailAddressUserDetailEntity.UserId, loginEntity.Id, emailAddressUserDetailEntity.UserId);
                 _loginDetailController.Insert(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary["Login Result"], "Success");
-                return Ok(new { authenticated = true });
+
+                var userController = new UserController();
+                var userEntity = userController.GetActiveEntityById(emailAddressUserDetailEntity.UserId);
+
+                var passwordController = new PasswordController();
+                var passwordEntity = passwordController.GetActiveEntityById(passwordId);
+
+                var securityTokenEntity = new SecurityTokenEntity
+                {
+                    Id1 = userEntity.Guid.ToString(),
+                    Id2 = passwordEntity.Guid.ToString()
+                };
+
+                return Ok(new { authenticated = true, securityToken = JsonConvert.SerializeObject(securityTokenEntity) });
             }
             catch (Exception)
             {

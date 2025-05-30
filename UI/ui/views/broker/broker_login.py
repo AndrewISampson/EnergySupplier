@@ -35,7 +35,9 @@ def broker_login_view(request):
             request.session['last_activity'] = datetime.datetime.utcnow().isoformat()
 
             if result.json().get('authenticated'):
-                return redirect('broker_dashboard')
+                response = redirect('broker_dashboard')
+                response.set_cookie('securityToken', result.json().get('securityToken'))
+                return response
             else:
                 context['error'] = result.json().get('errorMessage')
                 return render(request, 'broker/broker_login.html', context)
