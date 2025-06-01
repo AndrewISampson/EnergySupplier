@@ -1,33 +1,13 @@
-{% extends "navbar/master_navbar.html" %}
+{% extends "navbar/broker_navbar.html" %}
 
-{% block navbar %}
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'broker_dashboard' %}">Dashboard</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'broker_customer' %}">Customers</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'broker_commission' %}">Commissions</a>
-    </li>
-  </ul>
+{% load navbar_tags %}
 
-  <ul class="navbar-nav ms-auto">
-    <li class="nav-item d-flex align-items-center me-2">
-      <select class="form-select form-select-sm">
-        <option selected disabled>Select option</option>
-        <option value="1">Option 1</option>
-        <option value="2">Option 2</option>
-      </select>
-    </li>
-    <li class="nav-item">
-      <form method="POST" action="{% url 'logout' 'broker' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-outline-danger nav-link border-0 bg-transparent">
-          Logout
-        </button>
-      </form>
-    </li>
-  </ul>
+{% block subnavbar %}
+<li class="nav-item d-flex align-items-center me-2">
+  <select class="form-select form-select-sm" id="selectBroker">
+    <option value="" selected disabled>Select Broker</option>
+    <option value="1">Broker 1</option>
+    <option value="2">Broker 2</option>
+  </select>
+</li>
 {% endblock %}

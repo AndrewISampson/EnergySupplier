@@ -41,5 +41,10 @@ namespace API.Controllers.Database.Mapping.Table
         {
             _databaseController.ExecuteScalar($"INSERT INTO \"{_schema}\".\"{_table}\" (\"CreatedByUserId\", \"UserId\", \"ValidationCodeId\") VALUES ({createdByUserId}, {userId}, {validationCodeId})");
         }
+
+        internal void UpdateEffectiveToDateTime(long id, long closedByUserId)
+        {
+            _databaseController.ExecuteScalar($"UPDATE \"{_schema}\".\"{_table}\" SET \"EffectiveToDateTime\" = NOW() AT TIME ZONE 'UTC', \"ClosedByUserId\" = {closedByUserId} WHERE \"Id\" = {id}");
+        }
     }
 }

@@ -119,6 +119,8 @@ namespace API.Controllers.Code.BrokerLogin
                     return Ok(new { valid = false, message = forgotPasswordInvalidValidationCodeMessageValueSettingDetailEntity.Description });
                 }
 
+                administration_User_To_Administration_ValidationCodeController.UpdateEffectiveToDateTime(administration_User_To_Administration_ValidationCodeEntity.Id, emailAddressUserDetailEntity.UserId);
+
                 return Ok(new { valid = true, message = string.Empty });
             }
             catch (Exception)

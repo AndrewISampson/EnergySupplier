@@ -4,7 +4,143 @@
   Broker Dashboard
 {% endblock %}
 
-
 {% block content %}
-<p>This page will be a dashboard showing some high-level info</p>
+<style>
+  .collapse-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+</style>
+
+<div class="mb-3 border border-light rounded p-3">
+  <div class="collapse-header" data-bs-toggle="collapse" data-bs-target="#commissionSummaryChartCollapse" aria-expanded="true">
+    <h5 class="mb-0">Commission Summary Chart</h5>
+    <span class="toggle-icon">-</span>
+  </div>
+  <div id="commissionSummaryChartCollapse" class="collapse show mt-2">
+    <canvas id="commissionSummaryChartCanvas" height="100"></canvas>
+  </div>
+</div>
+<div class="mb-3 border border-light rounded p-3">
+  <div class="collapse-header" data-bs-toggle="collapse" data-bs-target="#commissionSummary" aria-expanded="false">
+    <h5 class="mb-0">Commission Summary</h5>
+    <span class="toggle-icon">+</span>
+  </div>
+  <div id="commissionSummary" class="collapse mt-2">
+    <p>Commission summary content goes here.</p>
+  </div>
+</div>
+
+<div class="mb-3 border border-light rounded p-3">
+  <div class="collapse-header" data-bs-toggle="collapse" data-bs-target="#nearQuotes" aria-expanded="false">
+    <h5 class="mb-0">Quotes Due To Start In The Next Week</h5>
+    <span class="toggle-icon">+</span>
+  </div>
+  <div id="nearQuotes" class="collapse mt-2">
+    <p>Quotes content goes here.</p>
+  </div>
+</div>
+
+<div class="mb-3 border border-light rounded p-3">
+  <div class="collapse-header" data-bs-toggle="collapse" data-bs-target="#contractsStarting" aria-expanded="false">
+    <h5 class="mb-0">Contracts Due To Start In The Next Week</h5>
+    <span class="toggle-icon">+</span>
+  </div>
+  <div id="contractsStarting" class="collapse mt-2">
+    <p>Contracts starting soon content goes here.</p>
+  </div>
+</div>
+
+<div class="mb-3 border border-light rounded p-3">
+  <div class="collapse-header" data-bs-toggle="collapse" data-bs-target="#contractsEnding" aria-expanded="false">
+    <h5 class="mb-0">Contracts Due To End In The Next Month</h5>
+    <span class="toggle-icon">+</span>
+  </div>
+  <div id="contractsEnding" class="collapse mt-2">
+    <p>Contracts ending soon content goes here.</p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('commissionSummaryChartCanvas').getContext('2d');
+
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [
+          {% for month in months %}"{{ month }}"{% if not forloop.last %}, {% endif %}{% endfor %}
+        ],
+        datasets: [{
+          data: [
+            {% for value in commission_data %}{{ value }}{% if not forloop.last %}, {% endif %}{% endfor %}
+          ],
+          backgroundColor: 'rgba(255, 193, 7, 0.7)',  // Bootstrap warning yellow with transparency
+          borderColor: 'rgba(255, 193, 7, 1)',        // Solid yellow border
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let value = context.parsed.y; // for bar chart, y value
+                return '£' + value.toLocaleString();
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: 'white',
+              callback: function(value) {
+                return '£' + value.toLocaleString();
+              }
+            },
+            grid: {
+              color: 'rgba(255,255,255,0.1)'
+            }
+          },
+          x: {
+            ticks: {
+              color: 'white'
+            },
+            grid: {
+              color: 'rgba(255,255,255,0.1)'
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+<script>
+  // Toggle plus/minus icons dynamically
+  document.querySelectorAll('.collapse-header').forEach(header => {
+    const icon = header.querySelector('.toggle-icon');
+    const targetId = header.getAttribute('data-bs-target');
+    const target = document.querySelector(targetId);
+
+    const updateIcon = () => {
+      icon.textContent = target.classList.contains('show') ? '−' : '+';
+    };
+
+    // Initial update
+    updateIcon();
+
+    // Listen for Bootstrap collapse events
+    target.addEventListener('shown.bs.collapse', updateIcon);
+    target.addEventListener('hidden.bs.collapse', updateIcon);
+  });
+</script>
+
 {% endblock %}

@@ -20,6 +20,12 @@ namespace API.Controllers.Code.Navbar
             try
             {
                 var getNavbarEntity = JsonConvert.DeserializeObject<GetNavbarEntity>(json.ToString());
+
+                if(getNavbarEntity.Path == "/" || string.IsNullOrWhiteSpace(getNavbarEntity.SecurityToken))
+                {
+                    return Ok(new { valid = true, navbar = "Master" });
+                }
+
                 var securityToken = JsonConvert.DeserializeObject<SecurityTokenEntity>(getNavbarEntity.SecurityToken);
 
                 var userController = new UserController();

@@ -1,19 +1,25 @@
 {% extends "navbar/master_navbar.html" %}
 
+{% load navbar_tags %}
+
 {% block navbar %}
   <ul class="navbar-nav">
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'broker_dashboard' %}">Dashboard</a>
+      <li class="nav-item">
+        <a class="nav-link {% active_class '/broker/dashboard' %}" href="{% url 'broker_dashboard' %}">Dashboard</a>
+      </li>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'broker_customer' %}">Customers</a>
+      <a class="nav-link {% active_class '/broker/customer' %}"  href="{% url 'broker_customer' %}">Customers</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'broker_commission' %}">Commissions</a>
+      <a class="nav-link {% active_class '/broker/commission' %}"  href="{% url 'broker_commission' %}">Commissions</a>
     </li>
   </ul>
 
   <ul class="navbar-nav ms-auto">
+    {% block subnavbar %}
+    {% endblock %}
     <li class="nav-item">
       <form method="POST" action="{% url 'logout' 'broker' %}">
         {% csrf_token %}

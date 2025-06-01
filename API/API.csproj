@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\Code\BrokerDashboard\" />
     <Folder Include="Controllers\Database\Information\Table\Setting\" />
   </ItemGroup>
 
