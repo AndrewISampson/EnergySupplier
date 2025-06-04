@@ -1,0 +1,26 @@
+{% extends "internal/internal_master.html" %}
+
+{% block title %}
+    {{ entity_name }} Detail
+{% endblock %}
+
+{% block content %}
+<h2>{{ entity_name }} Detail - ID: {{ entity_id }}</h2>
+
+{% if detail %}
+    <table>
+        <tbody>
+            {% for key, value in detail.items %}
+                <tr>
+                    <th style="text-align:left; padding: 8px;">{{ key }}</th>
+                    <td style="padding: 8px;">{{ value }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No detail found for ID {{ entity_id }}.</p>
+{% endif %}
+
+<a href="{% url 'entity_list_view' route=route %}" class="btn">Back to List</a>
+{% endblock %}

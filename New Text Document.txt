@@ -1,2 +1,71 @@
 MBnL96sE1NzMR1F!!
 1, uuid_generate_v4()
+
+"https://www.youtube.com/watch?v=hT0xDQ1otZg" --cookies-from-browser opera --extractor-args "youtube:player_client=all"
+
+Insert new process scripts
+INSERT INTO "Information"."Process"(
+	"CreatedByUserId", "Guid")
+	VALUES (1, uuid_generate_v4());
+
+INSERT INTO "Information"."ProcessDetail"(
+	"CreatedByUserId", "ProcessId", "ProcessAttributeId", "Description")
+	VALUES (1, 5, 1, 'Get Navbar');
+
+INSERT INTO "Information"."ProcessDetail"(
+	"CreatedByUserId", "ProcessId", "ProcessAttributeId", "Description")
+	VALUES (1, 5, 2, 'GetNavbar');
+
+INSERT INTO "Information"."ProcessDetail"(
+	"CreatedByUserId", "ProcessId", "ProcessAttributeId", "Description")
+	VALUES (1, 5, 3, 'API.Controllers.Code.Navbar');
+
+INSERT INTO "Information"."ProcessDetail"(
+	"CreatedByUserId", "ProcessId", "ProcessAttributeId", "Description")
+	VALUES (1, 5, 4, 'GetNavbarController');
+
+
+
+-- PROCEDURE: Broker.Broker_InsertNew(text, text, text)
+
+DROP PROCEDURE IF EXISTS "Broker"."Broker_InsertNew"(text, text, text);
+
+CREATE OR REPLACE PROCEDURE "Broker"."Broker_InsertNew"(
+	IN p_name text)
+LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    v_guid UUID;
+    v_Broker_id SMALLINT;
+BEGIN
+    -- Generate UUID
+    v_guid := uuid_generate_v4();
+
+    -- Insert into Broker.Broker
+    INSERT INTO "Broker"."Broker" (
+        "CreatedByUserId",
+        "Guid"
+    )
+    VALUES (
+        1,
+        v_guid
+    )
+    RETURNING "Id" INTO v_Broker_id;
+
+    -- Insert name into Broker.BrokerDetail
+    INSERT INTO "Broker"."BrokerDetail" (
+        "CreatedByUserId",
+        "BrokerId",
+        "BrokerAttributeId",
+        "Description"
+    )
+    VALUES (
+		1,
+        v_Broker_id,
+        1,
+        p_name
+    );
+END;
+$BODY$;
+ALTER PROCEDURE "Broker"."Broker_InsertNew"(text, text, text)
+    OWNER TO postgres;

@@ -4,7 +4,76 @@
   Internal Login
 {% endblock %}
 
-
 {% block content %}
-<p>Login to the internal section</p>
+  <div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
+      <h3 class="mb-4 text-center">Login</h3>
+      
+      {% if error %}
+        <div class="alert alert-danger" role="alert">
+          {{ error|safe }}
+        </div>
+      {% endif %}
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-warning">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="POST" action="{% url 'internal_login' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="username" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="username" name="username" required autofocus>
+        </div>
+        <div class="mb-3 position-relative">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input type="password" class="form-control" id="password" name="password" required>
+            <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+              <i class="fa fa-eye" id="toggleIcon"></i>
+            </span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" id="loginButton">Login</button>
+        <div id="spinner" class="text-center mt-3" style="display: none;">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const icon = document.getElementById('toggleIcon');
+
+    togglePassword.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      icon.classList.toggle('fa-eye');
+      icon.classList.toggle('fa-eye-slash');
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.querySelector("form");
+      const loginButton = document.getElementById("loginButton");
+      const spinner = document.getElementById("spinner");
+      const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+
+      form.addEventListener("submit", function () {
+        loginButton.disabled = true;
+        spinner.style.display = "block";
+        document.body.style.cursor = "progress";
+        forgotPasswordLink.style.pointerEvents = "none";
+        forgotPasswordLink.style.opacity = "0.5";
+      });
+    });
+  </script>
 {% endblock %}

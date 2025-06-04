@@ -1,6 +1,6 @@
 ﻿namespace API.Entity.Code
 {
-    public class ProcessBrokerForgotPasswordEntity()
+    public class ProcessForgotPasswordEntity()
     {
         public string Username { get; set; }
         public string iv_username { get; set; }

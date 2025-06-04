@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace API.Controllers.Code.BrokerLogin
+namespace API.Controllers.Code.Login
 {
-    public class ProcessBrokerLoginController : WebsiteRequestController
+    public class ProcessLoginController : WebsiteRequestController
     {
         private readonly LoginDetailController _loginDetailController = new();
         private readonly SettingAttributeController _settingAttributeController = new();
@@ -28,7 +28,7 @@ namespace API.Controllers.Code.BrokerLogin
         private readonly SettingDetailEntity _defaultErrorMessageNameSettingDetailEntity;
         private readonly SettingDetailEntity _defaultErrorMessageValueSettingDetailEntity;
 
-        public ProcessBrokerLoginController()
+        public ProcessLoginController()
         {
             _nameAccountSettingAttributeEntity = _settingAttributeController.GetActiveEntityByDescription("Name");
             _valueAccountSettingAttributeEntity = _settingAttributeController.GetActiveEntityByDescription("Value");
@@ -43,7 +43,7 @@ namespace API.Controllers.Code.BrokerLogin
             _defaultErrorMessageValueSettingDetailEntity = _settingDetailController.GetActiveEntityByIdAndAttributeId(_defaultErrorMessageNameSettingDetailEntity.SettingId, _valueAccountSettingAttributeEntity.Id);
         }
 
-        internal IActionResult ProcessBrokerLogin(JObject json)
+        internal IActionResult ProcessLogin(JObject json)
         {
             try
             {
@@ -110,10 +110,9 @@ namespace API.Controllers.Code.BrokerLogin
                 var roleUserAttributeEntity = userAttributeController.GetActiveEntityByDescription("Role");
                 var roleUserDetailEntityList = userDetailController.GetActiveEntityListByIdAndAttributeId(emailAddressUserDetailEntity.UserId, roleUserAttributeEntity.Id);
 
-                if (!roleUserDetailEntityList.Select(u => u.Description).Contains("Broker")
-                    && !roleUserDetailEntityList.Select(u => u.Description).Contains("Internal"))
+                if (!UserHasValidRole(roleUserDetailEntityList))
                 {
-                    LogLoginFailureAndCheckAccountLock(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account is neither broker nor internal", emailAddressUserDetailEntity.UserId);
+                    LogLoginFailureAndCheckAccountLock(createdByUserId, loginEntity.Id, loginAttributeDescriptionToIdDictionary, "Account does not have a valid role for this login", emailAddressUserDetailEntity.UserId);
                     return LoginFailureResult();
                 }
 
@@ -167,6 +166,11 @@ namespace API.Controllers.Code.BrokerLogin
             {
                 return Ok(new { authenticated = false, errorMessage = _defaultErrorMessageValueSettingDetailEntity.Description });
             }
+        }
+
+        internal virtual bool UserHasValidRole(List<Entity.Database.Administration.Table.User.UserDetailEntity> roleUserDetailEntityList)
+        {
+            return false;
         }
 
         private void LogLoginFailureAndCheckAccountLock(long createdByUserId, long loginId, Dictionary<string, long> loginAttributeDescriptionToIdDictionary, string failureReason, long userId)

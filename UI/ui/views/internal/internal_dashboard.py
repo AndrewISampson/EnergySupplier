@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from ui.views.broker.broker_master import load_broker_page
 
 def home(request):
-    return render(request, 'internal/internal_dashboard.html')
+    return load_broker_page(request, 'internal/internal_dashboard.html')

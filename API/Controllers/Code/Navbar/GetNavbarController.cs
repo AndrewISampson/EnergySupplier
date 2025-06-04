@@ -48,14 +48,35 @@ namespace API.Controllers.Code.Navbar
                 var userDetailController = new UserDetailController();
                 var roleUserDetailEntityList = userDetailController.GetActiveEntityListByIdAndAttributeId(userEntity.Id, roleUserAttributeEntity.Id);
 
-                if (roleUserDetailEntityList.Select(u => u.Description).Contains("Broker"))
+                if(getNavbarEntity.Path.Contains("Broker"))
                 {
-                    return Ok(new { valid = true, navbar = "Broker" });
+                    if (roleUserDetailEntityList.Select(u => u.Description).Contains("Broker"))
+                    {
+                        return Ok(new { valid = true, navbar = "Broker" });
+                    }
+
+                    if (roleUserDetailEntityList.Select(u => u.Description).Contains("Internal"))
+                    {
+                        return Ok(new { valid = true, navbar = "Broker_Internal" });
+                    }
+                }
+
+                if (getNavbarEntity.Path.Contains("Customer"))
+                {
+                    if (roleUserDetailEntityList.Select(u => u.Description).Contains("Customer"))
+                    {
+                        return Ok(new { valid = true, navbar = "Customer" });
+                    }
+
+                    if (roleUserDetailEntityList.Select(u => u.Description).Contains("Internal"))
+                    {
+                        return Ok(new { valid = true, navbar = "Customer_Internal" });
+                    }
                 }
 
                 if (roleUserDetailEntityList.Select(u => u.Description).Contains("Internal"))
                 {
-                    return Ok(new { valid = true, navbar = "Broker_Internal" });
+                    return Ok(new { valid = true, navbar = "Internal" });
                 }
 
                 return Ok(new { valid = false });

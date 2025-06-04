@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace API.Controllers.Code.BrokerLogin
+namespace API.Controllers.Code.Login
 {
-    public class ProcessBrokerForgotPasswordController : WebsiteRequestController
+    public class ProcessForgotPasswordController : WebsiteRequestController
     {
         private readonly SecurityController _securityController = new();
         private readonly SettingAttributeController _settingAttributeController = new();
@@ -24,7 +24,7 @@ namespace API.Controllers.Code.BrokerLogin
         private readonly SettingDetailEntity _defaultErrorMessageNameSettingDetailEntity;
         private readonly SettingDetailEntity _defaultErrorMessageValueSettingDetailEntity;
 
-        public ProcessBrokerForgotPasswordController()
+        public ProcessForgotPasswordController()
         {
             _nameAccountSettingAttributeEntity = _settingAttributeController.GetActiveEntityByDescription("Name");
             _valueAccountSettingAttributeEntity = _settingAttributeController.GetActiveEntityByDescription("Value");
@@ -37,13 +37,13 @@ namespace API.Controllers.Code.BrokerLogin
         {
             try
             {
-                var processBrokerForgotPasswordEntity = JsonConvert.DeserializeObject<ProcessBrokerForgotPasswordEntity>(json.ToString());
+                var processForgotPasswordEntity = JsonConvert.DeserializeObject<ProcessForgotPasswordEntity>(json.ToString());
 
-                return processBrokerForgotPasswordEntity.Step switch
+                return processForgotPasswordEntity.Step switch
                 {
-                    "email" => SendValidationCode(processBrokerForgotPasswordEntity),
-                    "code" => ValidateValidationCode(processBrokerForgotPasswordEntity),
-                    "reset" => ResetPassword(processBrokerForgotPasswordEntity),
+                    "email" => SendValidationCode(processForgotPasswordEntity),
+                    "code" => ValidateValidationCode(processForgotPasswordEntity),
+                    "reset" => ResetPassword(processForgotPasswordEntity),
                     _ => Ok(new { valid = false, message = _defaultErrorMessageValueSettingDetailEntity.Description })
                 };
             }
@@ -53,7 +53,7 @@ namespace API.Controllers.Code.BrokerLogin
             }
         }
 
-        private OkObjectResult SendValidationCode(ProcessBrokerForgotPasswordEntity processBrokerForgotPasswordEntity)
+        private OkObjectResult SendValidationCode(ProcessForgotPasswordEntity processBrokerForgotPasswordEntity)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace API.Controllers.Code.BrokerLogin
             }
         }
 
-        private OkObjectResult ValidateValidationCode(ProcessBrokerForgotPasswordEntity processBrokerForgotPasswordEntity)
+        private OkObjectResult ValidateValidationCode(ProcessForgotPasswordEntity processBrokerForgotPasswordEntity)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace API.Controllers.Code.BrokerLogin
             }
         }
 
-        private OkObjectResult ResetPassword(ProcessBrokerForgotPasswordEntity processBrokerForgotPasswordEntity)
+        private OkObjectResult ResetPassword(ProcessForgotPasswordEntity processBrokerForgotPasswordEntity)
         {
             try
             {
@@ -216,7 +216,7 @@ namespace API.Controllers.Code.BrokerLogin
             }
         }
 
-        private UserDetailEntity GetEmailAddressUserDetailEntity(ProcessBrokerForgotPasswordEntity processBrokerForgotPasswordEntity)
+        private UserDetailEntity GetEmailAddressUserDetailEntity(ProcessForgotPasswordEntity processBrokerForgotPasswordEntity)
         {
             var decryptedUsername = _securityController.Decrypt(processBrokerForgotPasswordEntity.Username, processBrokerForgotPasswordEntity.iv_username);
 
