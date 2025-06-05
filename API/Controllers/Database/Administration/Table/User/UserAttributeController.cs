@@ -24,5 +24,11 @@ namespace API.Controllers.Database.Administration.Table.User
             var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'");
             return new UserAttributeEntity(dataRow);
         }
+
+        internal List<UserAttributeEntity> GetActiveEntityList()
+        {
+            var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1'");
+            return _genericController.PopulateListFromDataRowList(dataRowList, dataRow => new UserAttributeEntity(dataRow));
+        }
     }
 }

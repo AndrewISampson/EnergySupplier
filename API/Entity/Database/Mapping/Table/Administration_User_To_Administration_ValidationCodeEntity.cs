@@ -16,6 +16,11 @@ namespace API.Entity.Database.Mapping.Table
 
         public Administration_User_To_Administration_ValidationCodeEntity(DataRow dataRow)
         {
+            if (dataRow == null)
+            {
+                return;
+            }
+
             Id = Convert.ToInt64(dataRow["Id"].ToString());
             CreatedDateTime = Convert.ToDateTime(dataRow["CreatedDateTime"].ToString());
             CreatedByUserId = Convert.ToInt64(dataRow["CreatedByUserId"].ToString());

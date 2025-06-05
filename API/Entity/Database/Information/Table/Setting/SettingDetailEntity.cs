@@ -17,6 +17,11 @@ namespace API.Entity.Database.Information.Table.Setting
 
         public SettingDetailEntity(DataRow dataRow)
         {
+            if (dataRow == null)
+            {
+                return;
+            }
+
             Id = Convert.ToInt64(dataRow["Id"].ToString());
             CreatedDateTime = Convert.ToDateTime(dataRow["CreatedDateTime"].ToString());
             CreatedByUserId = Convert.ToInt64(dataRow["CreatedByUserId"].ToString());

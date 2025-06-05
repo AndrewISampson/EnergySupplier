@@ -15,17 +15,17 @@
             <thead class="table-light">
                 <tr>
                     <th scope="col" style="width: 1%;">ID</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">{{ data_table_identifier }}</th>
                     <th scope="col" style="width: 1%;">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in page_obj %}
                 <tr>
-                    <td class="text-nowrap">{{ item|get_item:attribute_field }}</td>
+                    <td class="text-nowrap">{{ item.Id }}</td>
                     <td>{{ item.Name }}</td>
                     <td class="text-nowrap">
-                        <a href="{% url 'entity_detail_view' route=route entity_id=item|get_item:attribute_field %}" class="btn btn-sm btn-primary">
+                        <a href="{% url 'entity_detail_view' route=route entity_id=item|get_item:'Id' %}?name={{ item|get_item:'Name'|urlencode }}" class="btn btn-sm btn-primary">
                             Edit
                         </a>
                         <a href="" class="btn btn-sm btn-danger">

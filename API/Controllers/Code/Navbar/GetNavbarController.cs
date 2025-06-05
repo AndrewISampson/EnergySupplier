@@ -1,6 +1,4 @@
-﻿using API.Controllers.Database.Administration.Table.Password;
-using API.Controllers.Database.Administration.Table.User;
-using API.Controllers.Database.Mapping.Table;
+﻿using API.Controllers.Database.Administration.Table.User;
 using API.Entity.Code;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -21,23 +19,15 @@ namespace API.Controllers.Code.Navbar
             {
                 var getNavbarEntity = JsonConvert.DeserializeObject<GetNavbarEntity>(json.ToString());
 
-                if(getNavbarEntity.Path == "/" || string.IsNullOrWhiteSpace(getNavbarEntity.SecurityToken))
+                if (getNavbarEntity.Path == "/" || string.IsNullOrWhiteSpace(getNavbarEntity.SecurityToken))
                 {
                     return Ok(new { valid = true, navbar = "Master" });
                 }
 
-                var securityToken = JsonConvert.DeserializeObject<SecurityTokenEntity>(getNavbarEntity.SecurityToken);
+                var securityController = new SecurityController();
+                var userId = securityController.ValidateSecurityToken(getNavbarEntity.SecurityToken);
 
-                var userController = new UserController();
-                var userEntity = userController.GetActiveEntityByGuid(securityToken.Id1);
-
-                var passwordController = new PasswordController();
-                var passwordEntity = passwordController.GetActiveEntityByGuid(securityToken.Id2);
-
-                var administration_Password_To_Administration_UserController = new Administration_Password_To_Administration_UserController();
-                var administration_Password_To_Administration_UserEntity = administration_Password_To_Administration_UserController.GetActiveEntityByUserId(userEntity.Id);
-
-                if (administration_Password_To_Administration_UserEntity.PasswordId != passwordEntity.Id)
+                if (userId == 0)
                 {
                     return Ok(new { valid = false });
                 }
@@ -46,9 +36,9 @@ namespace API.Controllers.Code.Navbar
                 var roleUserAttributeEntity = userAttributeController.GetActiveEntityByDescription("Role");
 
                 var userDetailController = new UserDetailController();
-                var roleUserDetailEntityList = userDetailController.GetActiveEntityListByIdAndAttributeId(userEntity.Id, roleUserAttributeEntity.Id);
+                var roleUserDetailEntityList = userDetailController.GetActiveEntityListByIdAndAttributeId(userId, roleUserAttributeEntity.Id);
 
-                if(getNavbarEntity.Path.StartsWith("/broker"))
+                if (getNavbarEntity.Path.StartsWith("/broker"))
                 {
                     if (roleUserDetailEntityList.Select(u => u.Description).Contains("Broker"))
                     {

@@ -24,5 +24,11 @@ namespace API.Controllers.Database.Information.Table.Process
             var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'");
             return new ProcessAttributeEntity(dataRow);
         }
+
+        internal List<ProcessAttributeEntity> GetActiveEntityList()
+        {
+            var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1'");
+            return _genericController.PopulateListFromDataRowList(dataRowList, dataRow => new ProcessAttributeEntity(dataRow));
+        }
     }
 }

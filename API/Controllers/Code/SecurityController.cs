@@ -1,6 +1,11 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using API.Controllers.Database.Administration.Table.Password;
+using API.Controllers.Database.Administration.Table.User;
 using API.Controllers.Database.Administration.Table.ValidationCode;
+using API.Controllers.Database.Mapping.Table;
+using API.Entity.Code;
+using Newtonsoft.Json;
 
 namespace API.Controllers.Code
 {
@@ -48,6 +53,27 @@ namespace API.Controllers.Code
             validationCodeDetailController.Insert(userId, validationCodeEntity.Id, codeAccountSettingAttributeEntity.Id, validationCode);
 
             return validationCodeEntity.Id;
+        }
+
+        internal long ValidateSecurityToken(string securityToken)
+        {
+            var securityTokenEntity = JsonConvert.DeserializeObject<SecurityTokenEntity>(securityToken);
+
+            var userController = new UserController();
+            var userEntity = userController.GetActiveEntityByGuid(securityTokenEntity.Id1);
+
+            var passwordController = new PasswordController();
+            var passwordEntity = passwordController.GetActiveEntityByGuid(securityTokenEntity.Id2);
+
+            var administration_Password_To_Administration_UserController = new Administration_Password_To_Administration_UserController();
+            var administration_Password_To_Administration_UserEntity = administration_Password_To_Administration_UserController.GetActiveEntityByUserId(userEntity.Id);
+
+            if (administration_Password_To_Administration_UserEntity.PasswordId != passwordEntity.Id)
+            {
+                return 0;
+            }
+
+            return userEntity.Id;
         }
     }
 }

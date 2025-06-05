@@ -4,8 +4,8 @@ def home(request):
     pages = sorted([
         ('Broker.Broker', 'Broker'),
         ('Administration.User', 'User'),
-        ('Information.Process', 'Process'),
-        ('Information.Setting', 'Setting'),
+        ('Internal.Process', 'Process'),
+        ('Internal.Setting', 'Setting'),
         ('Customer.Customer', 'Customer')
     ], key=lambda x: x[1])
 

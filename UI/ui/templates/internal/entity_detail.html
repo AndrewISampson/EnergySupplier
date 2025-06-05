@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<h2 class="mb-4">{{ entity_name }} Detail - ID: {{ entity_id }}</h2>
+<h2 class="mb-4">{{ entity_name }} Detail - {{ detail_name }}</h2>
 
 <div class="container d-flex justify-content-center">
     <div class="table-responsive shadow-sm rounded" style="width: 100%;">
@@ -24,15 +24,15 @@
                     <tr>
                         <th class="text-nowrap">{{ key }}</th>
                         <td>{{ value.Attribute }}</td>
-                        <td>{{ value.Description }}</td>
-                        <td></td>
+                        <td class="description-cell">{{ value.Description }}</td>
+                        <td><button class="btn btn-sm btn-primary" onclick="editRow(this)">Edit</button></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
             <div class="alert alert-warning" role="alert">
-                No detail found for ID {{ entity_id }}.
+                No detail found for {{ detail_name }}.
             </div>
         {% endif %}
         <div class="mt-3">
@@ -40,4 +40,57 @@
         </div>
     </div>
 </div>
+
+<script>
+    async function editRow(button) {
+        const row = button.closest('tr');
+        const id = row.querySelector('th').textContent.trim(); // assuming ID is in <th>
+        const descriptionCell = row.querySelector('.description-cell');
+
+        if (button.textContent === 'Edit') {
+            // Switch to edit mode
+            const originalText = descriptionCell.textContent.trim();
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control';
+            input.value = originalText;
+            descriptionCell.innerHTML = '';
+            descriptionCell.appendChild(input);
+
+            button.textContent = 'Save';
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-success');
+        } else {
+            // Save and call API
+            const newValue = descriptionCell.querySelector('input').value;
+
+            const response = await fetch("{% url 'update_entity_detail' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')  // if CSRF is enabled
+                },
+                body: JSON.stringify({
+                    entity: "{{ entity_name }}",
+                    id: id,
+                    new_description: newValue
+                })
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Update failed.');
+            }
+        }
+    }
+
+    // Utility to get CSRF token from cookie (required for Django POST)
+    function getCookie(name) {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith(name + '='));
+        return cookieValue ? decodeURIComponent(cookieValue.split('=')[1]) : null;
+    }
+</script>
 {% endblock %}

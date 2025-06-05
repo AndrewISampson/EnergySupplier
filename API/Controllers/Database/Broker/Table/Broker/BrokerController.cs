@@ -1,6 +1,6 @@
 ﻿using API.Entity.Database.Broker.Table;
 
-namespace API.Controllers.Database.Broker.Table
+namespace API.Controllers.Database.Broker.Table.Broker
 {
     public class BrokerController
     {

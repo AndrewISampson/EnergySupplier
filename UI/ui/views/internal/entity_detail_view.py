@@ -1,5 +1,3 @@
-# ui/views/internal/entity_detail_view.py
-
 import json
 from django.shortcuts import render
 from django.http import Http404
@@ -7,14 +5,12 @@ from ui.utils.api import call_api
 from ui.views.broker.broker_master import load_broker_page
 
 def entity_detail_view(request, route, entity_id):
-    try:
-        app_label, base_model = route.split('.')
-    except ValueError:
-        raise Http404(f"Invalid route: '{route}'")
+    app_label, base_model = route.split('.')
+    detail_name = request.GET.get('name', '')
 
     payload = {
         'Process': 'a3ebe6c6-c0cd-4a2d-842b-58fc5b71c7fb',
-        'Entity': app_label,
+        'Entity': base_model,
         'EntityId': entity_id
     }
 
@@ -46,6 +42,6 @@ def entity_detail_view(request, route, entity_id):
     return load_broker_page(request, 'internal/entity_detail.html', {
         'route': route,
         'entity_name': base_model,
-        'entity_id': entity_id,
+        'detail_name': detail_name,
         'detail': detail_dict
     })

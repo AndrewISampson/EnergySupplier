@@ -10,19 +10,19 @@ INSERT INTO "Information"."Process"(
 
 INSERT INTO "Information"."ProcessDetail"(
 	"CreatedByUserId", "ProcessId", "ProcessAttributeId", "Description")
-	VALUES (1, 5, 1, 'Get Navbar');
+	VALUES (1, 7, 1, 'Update Entity Detail');
 
 INSERT INTO "Information"."ProcessDetail"(
 	"CreatedByUserId", "ProcessId", "ProcessAttributeId", "Description")
-	VALUES (1, 5, 2, 'GetNavbar');
+	VALUES (1, 7, 2, 'UpdateEntityDetail');
 
 INSERT INTO "Information"."ProcessDetail"(
 	"CreatedByUserId", "ProcessId", "ProcessAttributeId", "Description")
-	VALUES (1, 5, 3, 'API.Controllers.Code.Navbar');
+	VALUES (1, 7, 3, 'API.Controllers.Code.GetEntity');
 
 INSERT INTO "Information"."ProcessDetail"(
 	"CreatedByUserId", "ProcessId", "ProcessAttributeId", "Description")
-	VALUES (1, 5, 4, 'GetNavbarController');
+	VALUES (1, 7, 4, 'UpdateEntityDetailController');
 
 
 

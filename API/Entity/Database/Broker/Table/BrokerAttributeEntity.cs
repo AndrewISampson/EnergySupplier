@@ -15,6 +15,11 @@ namespace API.Entity.Database.Broker.Table
 
         public BrokerAttributeEntity(DataRow dataRow)
         {
+            if (dataRow == null)
+            {
+                return;
+            }
+
             Id = Convert.ToInt64(dataRow["Id"].ToString());
             CreatedDateTime = Convert.ToDateTime(dataRow["CreatedDateTime"].ToString());
             CreatedByUserId = Convert.ToInt64(dataRow["CreatedByUserId"].ToString());

@@ -1,7 +1,6 @@
 from django.shortcuts import redirect
 from ui.utils.api import call_api
 
-
 def determine_navbar_type(request):
     path = request.path
 
