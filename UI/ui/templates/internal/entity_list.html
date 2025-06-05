@@ -7,38 +7,64 @@
 {% endblock %}
 
 {% block content %}
-<h2>{{ entity_name }} Summary</h2>
+<h2 class="mb-4">{{ entity_name }} Configuration</h2>
 
-<table class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
-    <thead class="bg-gray-100">
-        <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">ID</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Action</th>
-        </tr>
-    </thead>
-    <tbody class="bg-white divide-y divide-gray-200">
-        {% for item in page_obj %}
-        <tr class="hover:bg-gray-50">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item|get_item:attribute_field }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.Name }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
-                <a href="{% url 'entity_detail_view' route=route entity_id=item|get_item:attribute_field %}" class="hover:underline font-medium">Edit</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container d-flex justify-content-center">
+    <div class="table-responsive shadow-sm rounded" style="width: 100%;">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" style="width: 1%;">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col" style="width: 1%;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in page_obj %}
+                <tr>
+                    <td class="text-nowrap">{{ item|get_item:attribute_field }}</td>
+                    <td>{{ item.Name }}</td>
+                    <td class="text-nowrap">
+                        <a href="{% url 'entity_detail_view' route=route entity_id=item|get_item:attribute_field %}" class="btn btn-sm btn-primary">
+                            Edit
+                        </a>
+                        <a href="" class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
 
-<div class="pagination">
-    {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% endif %}
-
-    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Next</a>
-    {% endif %}
+        </table>
+    </div>
 </div>
+
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
 {% endblock %}

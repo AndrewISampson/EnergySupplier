@@ -1,64 +1,51 @@
 # ui/views/internal/entity_detail_view.py
 
+import json
 from django.shortcuts import render
 from django.http import Http404
 from ui.utils.api import call_api
 from ui.views.broker.broker_master import load_broker_page
 
 def entity_detail_view(request, route, entity_id):
-    """
-    Fetches all attribute‐value pairs for a given entity ID via the API 
-    and renders them in a table.
-    
-    Expects:
-      • route      = "<AppLabel>.<ModelName>" (e.g. "Broker.Broker")
-      • entity_id  = primary key of the entity (e.g. BrokerId, CustomerId, etc.)
-    
-    The API is expected to return JSON like:
-      {
-        "entityDetail": {
-            "BrokerId": 123,
-            "Name": "Acme Brokers Ltd",
-            "Address": "123 Main St",
-            "Phone": "555-1234",
-            …
-        }
-      }
-    (Or similarly for Customer, Process, etc.)
-    """
-
-    # 1) Split route into app_label and base_model (e.g. "Broker", "Broker")
     try:
         app_label, base_model = route.split('.')
     except ValueError:
         raise Http404(f"Invalid route: '{route}'")
 
-    # 2) Build payload for the API call
-    #    You must replace 'YOUR_DETAIL_PROCESS_GUID' with the actual Process GUID your API expects
     payload = {
-        'Process': 'YOUR_DETAIL_PROCESS_GUID',
+        'Process': 'a3ebe6c6-c0cd-4a2d-842b-58fc5b71c7fb',
         'Entity': app_label,
         'EntityId': entity_id
     }
 
-    # 3) Call the API
-    response = call_api(payload)
-    if not response.ok:
-        raise Http404(f"API error fetching {base_model} details (ID {entity_id}).")
+    result = call_api(payload)
+    raw = result.json().get('entityList')
+    records = json.loads(raw) if isinstance(raw, str) else raw
 
-    data = response.json()
-    detail = data.get('entityDetail')
-    if not detail:
-        raise Http404(f"No details found for {base_model} ID {entity_id}.")
+    detail_dict = {}
 
-    # 4) Render the template, passing in:
-    #    • route         (so "Back to List" can reconstruct the URL)
-    #    • entity_name   (e.g. "Broker" or "Customer")
-    #    • entity_id     (the numeric ID)
-    #    • detail        (a dict of all fields/values)
+    if isinstance(records, list):
+        for record in records:
+            rec_id = record.get("ID") or record.get("id") or record.get("Id") or "unknown"
+            detail_dict[str(rec_id)] = {
+                "Attribute": record.get("Attribute", ""),
+                "Description": record.get("Description", ""),
+                "Action": f'<a href="/edit/{rec_id}" class="btn btn-sm btn-primary">Edit</a>'
+            }
+    elif isinstance(records, dict):
+        detail_dict = {
+            str(records.get("ID", "unknown")): {
+                "Attribute": records.get("Attribute", ""),
+                "Description": records.get("Description", ""),
+                "Action": f'<a href="/edit/{records.get("ID")}" class="btn btn-sm btn-primary">Edit</a>'
+            }
+        }
+    else:
+        detail_dict = {}
+
     return load_broker_page(request, 'internal/entity_detail.html', {
-        'route':       route,
+        'route': route,
         'entity_name': base_model,
-        'entity_id':   entity_id,
-        'detail':      detail
+        'entity_id': entity_id,
+        'detail': detail_dict
     })

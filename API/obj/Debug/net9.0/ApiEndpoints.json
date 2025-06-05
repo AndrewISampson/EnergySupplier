@@ -2,6 +2,22 @@
   {
     "ContainingType": "API.Controllers.WebsiteRequestController",
     "Method": "Post",
+    "RelativePath": "api/GetEntityDetail",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestData",
+        "Type": "System.Object",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API.Controllers.WebsiteRequestController",
+    "Method": "Post",
     "RelativePath": "api/GetEntitySummary",
     "HttpMethod": "POST",
     "IsController": true,

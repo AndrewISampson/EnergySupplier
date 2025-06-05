@@ -31,6 +31,12 @@ namespace API.Controllers.Database.Broker.Table
             return new BrokerDetailEntity(dataRow);
         }
 
+        internal List<BrokerDetailEntity> GetActiveEntityListById(long id)
+        {
+            var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"BrokerId\" = {id}");
+            return _genericController.PopulateListFromDataRowList(dataRowList, dataRow => new BrokerDetailEntity(dataRow));
+        }
+
         internal List<BrokerDetailEntity> GetActiveEntityListByAttributeId(long attributeId)
         {
             var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"BrokerAttributeId\" = {attributeId}");

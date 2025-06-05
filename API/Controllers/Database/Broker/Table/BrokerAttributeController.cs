@@ -24,5 +24,11 @@ namespace API.Controllers.Database.Broker.Table
             var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Description\" = '{description}'");
             return new BrokerAttributeEntity(dataRow);
         }
+
+        internal List<BrokerAttributeEntity> GetActiveEntityList()
+        {
+            var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1'");
+            return _genericController.PopulateListFromDataRowList(dataRowList, dataRow => new BrokerAttributeEntity(dataRow));
+        }
     }
 }

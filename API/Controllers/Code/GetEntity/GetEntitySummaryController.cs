@@ -30,13 +30,15 @@ namespace API.Controllers.Code.GetEntity
             var nameBrokerAttributeEntity = brokerAttributeController.GetActiveEntityByDescription("Name");
 
             var brokerDetailController = new BrokerDetailController();
-            var nameBrokerDetailEntityList = brokerDetailController.GetActiveEntityListByAttributeId(nameBrokerAttributeEntity.Id);
+            var nameBrokerDetailEntityList = brokerDetailController.GetActiveEntityListByAttributeId(nameBrokerAttributeEntity.Id)
+                .OrderBy(d => d.Description)
+                .ToList();
 
-            var brokerSummaryEntityList = new List<BrokerSummaryEntity>();
+            var brokerSummaryEntityList = new List<BrokerBrokerSummaryEntity>();
 
             foreach(var nameBrokerDetailEntity in nameBrokerDetailEntityList)
             {
-                var brokerSummaryEntity = new BrokerSummaryEntity
+                var brokerSummaryEntity = new BrokerBrokerSummaryEntity
                 {
                     BrokerId = nameBrokerDetailEntity.BrokerId,
                     Name = nameBrokerDetailEntity.Description

@@ -48,7 +48,7 @@ namespace API.Controllers.Code.Navbar
                 var userDetailController = new UserDetailController();
                 var roleUserDetailEntityList = userDetailController.GetActiveEntityListByIdAndAttributeId(userEntity.Id, roleUserAttributeEntity.Id);
 
-                if(getNavbarEntity.Path.Contains("Broker"))
+                if(getNavbarEntity.Path.StartsWith("/broker"))
                 {
                     if (roleUserDetailEntityList.Select(u => u.Description).Contains("Broker"))
                     {
@@ -61,7 +61,7 @@ namespace API.Controllers.Code.Navbar
                     }
                 }
 
-                if (getNavbarEntity.Path.Contains("Customer"))
+                if (getNavbarEntity.Path.StartsWith("/customer"))
                 {
                     if (roleUserDetailEntityList.Select(u => u.Description).Contains("Customer"))
                     {
