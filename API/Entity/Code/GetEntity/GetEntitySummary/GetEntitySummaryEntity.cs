@@ -1,6 +1,6 @@
-﻿namespace API.Entity.Code.GetEntityAttribute
+﻿namespace API.Entity.Code.GetEntity.GetEntitySummary
 {
-    public class GetEntityAttributeEntity
+    public class GetEntitySummaryEntity
     {
         public string Entity { get; set; }
         public string SecurityToken { get; set; }

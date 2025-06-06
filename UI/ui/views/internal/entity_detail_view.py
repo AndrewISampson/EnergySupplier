@@ -1,4 +1,5 @@
 import json
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from ui.utils.api import call_api
 from ui.views.broker.broker_master import load_broker_page
 
@@ -37,6 +38,18 @@ def entity_detail_view(request, route, entity_id):
     else:
         detail_dict = {}
 
+    detail_items = list(detail_dict.items())
+
+    paginator = Paginator(detail_items, 10)
+    page_number = request.GET.get('page')
+
+    try:
+        paginated_details = paginator.page(page_number)
+    except PageNotAnInteger:
+        paginated_details = paginator.page(1)
+    except EmptyPage:
+        paginated_details = paginator.page(paginator.num_pages)
+
     used_attributes = [record.get("Attribute") for record in records if record.get("Attribute")]
 
     payload = {
@@ -57,6 +70,6 @@ def entity_detail_view(request, route, entity_id):
         'entity_name': entity,
         'entity_id': entity_id,
         'detail_name': detail_name,
-        'detail': detail_dict,
+        'paginated_details': paginated_details,
         'unused_attributes': unused_attributes,
     })

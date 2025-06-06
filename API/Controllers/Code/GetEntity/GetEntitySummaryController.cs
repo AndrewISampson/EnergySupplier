@@ -3,7 +3,7 @@ using API.Controllers.Database.Broker.Table.Broker;
 using API.Controllers.Database.Customer.Table.Customer;
 using API.Controllers.Database.Information.Table.Process;
 using API.Controllers.Database.Information.Table.Setting;
-using API.Entity.Code.GetEntitySummary;
+using API.Entity.Code.GetEntity.GetEntitySummary;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

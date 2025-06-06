@@ -1,4 +1,4 @@
-﻿namespace API.Entity.Code.GetEntitySummary
+﻿namespace API.Entity.Code.GetEntity.GetEntitySummary
 {
     public class EntitySummaryEntity
     {

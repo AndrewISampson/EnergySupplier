@@ -1,4 +1,4 @@
-﻿namespace API.Entity.Code.GetEntityAttribute
+﻿namespace API.Entity.Code.GetEntity.GetEntityAttribute
 {
     public class EntityAttributeEntity
     {

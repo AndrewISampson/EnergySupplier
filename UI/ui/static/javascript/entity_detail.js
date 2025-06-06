@@ -5,8 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const cells = row.querySelectorAll('td');
         const attributeCell = cells[0];
         const descriptionCell = row.querySelector('.description-cell');
+        const originalButtonTextContent = button.textContent;
 
-        if (button.textContent === 'Edit') {
+        if (originalButtonTextContent === 'Edit'
+            || originalButtonTextContent === 'Add New Detail') {
             // Save original values
             const originalDescription = descriptionCell.textContent.trim();
             descriptionCell.setAttribute('data-original-text', originalDescription);
@@ -48,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (id === '-1') {
                     attributeCell.innerHTML = attributeCell.getAttribute('data-original-text');
                 }
-                button.textContent = 'Edit';
+                button.textContent = originalButtonTextContent;
                 button.classList.remove('btn-success');
                 button.classList.add('btn-primary');
                 cancelBtn.remove();

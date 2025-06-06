@@ -46,7 +46,7 @@ namespace API.Controllers.Database.Administration.Table.Password
                 guid = Guid.NewGuid();
             }
 
-            _databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"Password\" (\"CreatedByUserId\", \"Guid\") VALUES ({createdByUserId}, '{guid}')");
+            _databaseController.ExecuteScalar($"INSERT INTO \"{_schema}\".\"{_table}\" (\"CreatedByUserId\", \"Guid\") VALUES ({createdByUserId}, '{guid}')");
             return GetActiveEntityByGuid(guid);
         }
     }

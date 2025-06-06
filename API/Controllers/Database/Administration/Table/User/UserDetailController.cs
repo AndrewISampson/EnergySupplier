@@ -57,7 +57,7 @@ namespace API.Controllers.Database.Administration.Table.User
 
         internal void Insert(long createdByUserId, long id, long attributeId, string description)
         {
-            _databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"UserDetail\" (\"CreatedByUserId\", \"UserId\", \"UserAttributeId\", \"Description\") VALUES ({createdByUserId}, {id}, {attributeId}, '{description}')");
+            _databaseController.ExecuteScalar($"INSERT INTO \"{_schema}\".\"{_table}\" (\"CreatedByUserId\", \"UserId\", \"UserAttributeId\", \"Description\") VALUES ({createdByUserId}, {id}, {attributeId}, '{description}')");
         }
 
         internal void UpdateEffectiveToDateTime(long id, long closedByUserId)

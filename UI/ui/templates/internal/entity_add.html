@@ -1,112 +1,85 @@
 {% extends "internal/internal_master.html" %}
 
+{% load static %}
+
 {% block title %}
     Add New {{ entity_name }}
 {% endblock %}
 
 {% block content %}
-<h2 class="mb-4">{{ detail_name }}</h2>
+<h2 class="mb-4">New {{ entity_name }}</h2>
 
 <div class="container d-flex justify-content-center">
     <div class="table-responsive shadow-sm rounded" style="width: 100%;">
-        {% if detail %}
-            <table class="table table-bordered table-striped align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col" style="width: 1%;">ID</th>
-                        <th scope="col" style="width: 15%;">Attribute</th>
-                        <th scope="col">Description</th>
-                        <th scope="col" style="width: 11%;">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for key, value in detail.items %}
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" style="width: 1%;">ID</th>
+                    <th scope="col" style="width: 15%;">Attribute</th>
+                    <th scope="col">Description</th>
+                    <th scope="col" style="width: 11%;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in paginated_details %}
                     <tr>
                         <th class="text-nowrap">{{ key }}</th>
                         <td>{{ value.Attribute }}</td>
                         <td class="description-cell">{{ value.Description }}</td>
-                        <td><button class="btn btn-sm btn-primary" onclick="editRow(this)">Edit</button></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="editRow(this)">{% if key == "-1" %}Add New Detail{% else %}Edit{% endif %}</button>
+                        </td>
                     </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <div class="alert alert-warning" role="alert">
-                No detail found for {{ detail_name }}.
-            </div>
-        {% endif %}
-        <div class="mt-3">
-            <a href="{% url 'entity_list_view' route=entity_name|lower %}?entity={{ entity_name }}" class="btn btn-secondary">Back to List</a>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-3 d-flex justify-content-between">
+            <a href="{% url 'entity_list_view' route=entity_name|lower %}?entity={{ entity_name }}" class="btn btn-secondary">
+                Back to List
+            </a>
+            <button class="btn btn-success" onclick="saveNewEntity()">Save New {{ entity_name }}</button>
         </div>
     </div>
 </div>
 
+<nav aria-label="Page navigation" class="mt-3">
+  <ul class="pagination justify-content-center">
+    {% if paginated_details.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1" aria-label="First">&laquo;&laquo;</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ paginated_details.previous_page_number }}" aria-label="Previous">&laquo;</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">&laquo;&laquo;</span></li>
+      <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+    {% endif %}
+
+    <li class="page-item disabled">
+      <span class="page-link">Page {{ paginated_details.number }} of {{ paginated_details.paginator.num_pages }}</span>
+    </li>
+
+    {% if paginated_details.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ paginated_details.next_page_number }}" aria-label="Next">&raquo;</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ paginated_details.paginator.num_pages }}" aria-label="Last">&raquo;&raquo;</a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      <li class="page-item disabled"><span class="page-link">&raquo;&raquo;</span></li>
+    {% endif %}
+  </ul>
+</nav>
+
 <script>
-    async function editRow(button) {
-        const row = button.closest('tr');
-        const id = row.querySelector('th').textContent.trim();
-        const descriptionCell = row.querySelector('.description-cell');
-
-        if (button.textContent === 'Edit') {
-            const originalText = descriptionCell.textContent.trim();
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.className = 'form-control';
-            input.value = originalText;
-
-            // Save original text for cancellation
-            descriptionCell.setAttribute('data-original-text', originalText);
-            descriptionCell.innerHTML = '';
-            descriptionCell.appendChild(input);
-
-            // Change Edit button to Save
-            button.textContent = 'Save';
-            button.classList.remove('btn-primary');
-            button.classList.add('btn-success');
-
-            // Add Cancel button
-            const cancelBtn = document.createElement('button');
-            cancelBtn.textContent = 'Cancel';
-            cancelBtn.className = 'btn btn-sm btn-secondary ms-2';
-            cancelBtn.onclick = function () {
-                // Revert to original text
-                descriptionCell.innerHTML = descriptionCell.getAttribute('data-original-text');
-                button.textContent = 'Edit';
-                button.classList.remove('btn-success');
-                button.classList.add('btn-primary');
-                cancelBtn.remove();
-            };
-            button.parentElement.appendChild(cancelBtn);
-        } else {
-            const newValue = descriptionCell.querySelector('input').value;
-
-            const response = await fetch("{% url 'update_entity_detail' %}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({
-                    entity: "{{ entity_name }}",
-                    id: id,
-                    new_description: newValue
-                })
-            });
-
-            if (response.ok) {
-                location.reload();
-            } else {
-                alert('Update failed.');
-            }
-        }
-    }
-
-    function getCookie(name) {
-        const cookieValue = document.cookie
-            .split('; ')
-            .find(row => row.startsWith(name + '='));
-        return cookieValue ? decodeURIComponent(cookieValue.split('=')[1]) : null;
-    }
+    window.unusedAttributes = {{ unused_attributes|safe }};
+    window.addEntityUrl = "{% url 'add_entity' %}";
+    window.entity = "{{ entity_name }}";
 </script>
+
+<script src="{% static 'javascript/entity_add.js' %}"></script>
 
 {% endblock %}

@@ -24,5 +24,18 @@ namespace API.Controllers.Database.Customer.Table.Customer
             var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"Guid\" = '{guid}'");
             return new CustomerEntity(dataRow);
         }
+
+        internal CustomerEntity InsertNewAndGetEntity(long createdByUserId)
+        {
+            var guid = Guid.NewGuid();
+
+            while (GetActiveEntityByGuid(guid).Id != 0)
+            {
+                guid = Guid.NewGuid();
+            }
+
+            _databaseController.ExecuteScalar($"INSERT INTO \"{_schema}\".\"{_table}\" (\"CreatedByUserId\", \"Guid\") VALUES ({createdByUserId}, '{guid}')");
+            return GetActiveEntityByGuid(guid);
+        }
     }
 }

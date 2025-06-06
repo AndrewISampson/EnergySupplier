@@ -1,8 +1,10 @@
 import json
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from ui.utils.api import call_api
 from ui.views.broker.broker_master import load_broker_page
 
 def entity_add_view(request, route):
+    detail_name = request.GET.get('name', '')
     entity = request.GET.get('entity')
 
     payload = {
@@ -36,8 +38,36 @@ def entity_add_view(request, route):
     else:
         detail_dict = {}
 
+    detail_items = list(detail_dict.items())
+
+    paginator = Paginator(detail_items, 10)
+    page_number = request.GET.get('page')
+
+    try:
+        paginated_details = paginator.page(page_number)
+    except PageNotAnInteger:
+        paginated_details = paginator.page(1)
+    except EmptyPage:
+        paginated_details = paginator.page(paginator.num_pages)
+
+    used_attributes = [record.get("Attribute") for record in records if record.get("Attribute")]
+
+    payload = {
+        'Process': '1abe91c6-7730-4769-8a6d-d899bda1f639',
+        'Entity': entity
+    }
+
+    result = call_api(request, payload)
+    raw = result.json().get('entityList')
+    records = json.loads(raw) if isinstance(raw, str) else raw
+
+    all_attributes = [record.get("Description") for record in records]
+    unused_attributes = list(set(all_attributes) - set(used_attributes))
+    unused_attributes.sort()
+    unused_attributes.insert(0, "")
+
     return load_broker_page(request, 'internal/entity_add.html', {
         'entity_name': entity,
-        'detail_name': 'New ' + entity,
-        'detail': detail_dict
+        'paginated_details': paginated_details,
+        'unused_attributes': unused_attributes,
     })

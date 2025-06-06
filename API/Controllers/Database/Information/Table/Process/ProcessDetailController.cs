@@ -31,6 +31,12 @@ namespace API.Controllers.Database.Information.Table.Process
             return new ProcessDetailEntity(dataRow);
         }
 
+        internal ProcessDetailEntity GetActiveEntityByAttributeIdAndDescription(long attributeId, string description)
+        {
+            var dataRow = _databaseController.GetFirstOrDefault($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"ProcessAttributeId\" = {attributeId} AND \"Description\" = '{description}'");
+            return new ProcessDetailEntity(dataRow);
+        }
+
         internal List<ProcessDetailEntity> GetActiveEntityListByAttributeId(long attributeId)
         {
             var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"ProcessAttributeId\" = {attributeId}");

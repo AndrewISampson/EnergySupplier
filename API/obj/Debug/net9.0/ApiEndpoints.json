@@ -80,6 +80,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "API.Controllers.Code.GetEntity.InsertEntityController",
+    "Method": "InsertEntity",
+    "RelativePath": "api/InsertEntity",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "json",
+        "Type": "Newtonsoft.Json.Linq.JObject",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API.Controllers.WebsiteRequestController",
+    "Method": "Post",
+    "RelativePath": "api/InsertEntity",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestData",
+        "Type": "System.Object",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "API.Controllers.WebsiteRequestController",
     "Method": "Post",
     "RelativePath": "api/ProcessBrokerLogin",

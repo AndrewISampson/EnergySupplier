@@ -39,7 +39,7 @@ namespace API.Controllers.Database.Administration.Table.Password
 
         internal void Insert(long createdByUserId, long id, long attributeId, string description)
         {
-            _databaseController.ExecuteScalar($"INSERT INTO \"Administration\".\"PasswordDetail\" (\"CreatedByUserId\", \"PasswordId\", \"PasswordAttributeId\", \"Description\") VALUES ({createdByUserId}, {id}, {attributeId}, '{description}')");
+            _databaseController.ExecuteScalar($"INSERT INTO \"{_schema}\".\"{_table}\" (\"CreatedByUserId\", \"PasswordId\", \"PasswordAttributeId\", \"Description\") VALUES ({createdByUserId}, {id}, {attributeId}, '{description}')");
         }
     }
 }

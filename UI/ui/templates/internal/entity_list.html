@@ -26,8 +26,8 @@
                     <td>{{ item.Name }}</td>
                     <td class="text-nowrap">
                         {% if item.Id == -1 %}
-                            <a href="{% url 'entity_add_view' route=entity_name|lower %}?name={{ item|get_item:'Name'|urlencode }}&entity={{ entity_name }}" class="btn btn-sm btn-success">
-                                Add
+                            <a href="{% url 'entity_add_view' route=entity_name|lower %}?name={{ item|get_item:'Name'|urlencode }}&entity={{ entity_name }}" class="btn btn-sm btn-primary">
+                                Add New {{ entity_name }}
                             </a>
                         {% else %}
                             <a href="{% url 'entity_detail_view' route=entity_name|lower entity_id=item|get_item:'Id' %}?name={{ item|get_item:'Name'|urlencode }}&entity={{ entity_name }}" class="btn btn-sm btn-primary">
