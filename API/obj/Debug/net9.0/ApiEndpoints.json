@@ -1,5 +1,37 @@
 [
   {
+    "ContainingType": "API.Controllers.Code.GetEntity.GetEntityAttributeController",
+    "Method": "GetEntityAttribute",
+    "RelativePath": "api/GetEntityAttribute",
+    "HttpMethod": "",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "json",
+        "Type": "Newtonsoft.Json.Linq.JObject",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "API.Controllers.WebsiteRequestController",
+    "Method": "Post",
+    "RelativePath": "api/GetEntityAttribute",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "requestData",
+        "Type": "System.Object",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "API.Controllers.WebsiteRequestController",
     "Method": "Post",
     "RelativePath": "api/GetEntityDetail",

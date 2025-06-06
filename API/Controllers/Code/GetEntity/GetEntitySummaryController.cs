@@ -21,6 +21,14 @@ namespace API.Controllers.Code.GetEntity
         {
             var getEntitySummaryEntity = JsonConvert.DeserializeObject<GetEntitySummaryEntity>(json.ToString());
 
+            var securityController = new SecurityController();
+            var userId = securityController.ValidateSecurityToken(getEntitySummaryEntity.SecurityToken);
+
+            if (userId == 0)
+            {
+                return Ok(new { valid = false });
+            }
+
             return getEntitySummaryEntity.Entity switch
             {
                 "Broker" => GetBrokerSummaryOkObjectResult(),
@@ -127,6 +135,8 @@ namespace API.Controllers.Code.GetEntity
 
                 summaryEntityList.Add(summaryEntity);
             }
+
+            summaryEntityList.Add(new EntitySummaryEntity(-1, string.Empty, dataTableIdentifier));
 
             return Ok(new { valid = true, entityList = JsonConvert.SerializeObject(summaryEntityList) });
         }

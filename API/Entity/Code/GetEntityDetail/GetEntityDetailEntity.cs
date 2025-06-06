@@ -4,5 +4,6 @@
     {
         public string Entity { get; set; }
         public long EntityId { get; set; }
+        public string SecurityToken { get; set; }
     }
 }

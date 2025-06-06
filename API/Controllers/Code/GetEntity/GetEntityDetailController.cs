@@ -21,6 +21,14 @@ namespace API.Controllers.Code.GetEntity
         {
             var getEntityDetailEntity = JsonConvert.DeserializeObject<GetEntityDetailEntity>(json.ToString());
 
+            var securityController = new SecurityController();
+            var userId = securityController.ValidateSecurityToken(getEntityDetailEntity.SecurityToken);
+
+            if (userId == 0)
+            {
+                return Ok(new { valid = false });
+            }
+
             return getEntityDetailEntity.Entity switch
             {
                 "Broker" => GetBrokerDetailOkObjectResult(getEntityDetailEntity.EntityId),
@@ -141,13 +149,15 @@ namespace API.Controllers.Code.GetEntity
         {
             var entityDetailEntityList = new List<EntityDetailEntity>();
 
-            foreach(var detailKeyValuePair in detailDictionary.OrderBy(d => d.Key))
+            foreach (var detailKeyValuePair in detailDictionary.OrderBy(d => d.Key))
             {
-                foreach(var attributeKeyValuePair in detailKeyValuePair.Value.OrderBy(d => d.Value))
+                foreach (var attributeKeyValuePair in detailKeyValuePair.Value.OrderBy(d => d.Value))
                 {
                     entityDetailEntityList.Add(new EntityDetailEntity(attributeKeyValuePair.Key, detailKeyValuePair.Key, attributeKeyValuePair.Value));
                 }
             }
+
+            entityDetailEntityList.Add(new EntityDetailEntity(-1, string.Empty, string.Empty));
 
             return Ok(new { valid = true, entityList = JsonConvert.SerializeObject(entityDetailEntityList) });
         }

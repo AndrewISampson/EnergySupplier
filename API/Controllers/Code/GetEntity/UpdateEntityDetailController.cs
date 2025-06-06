@@ -29,6 +29,16 @@ namespace API.Controllers.Code.GetEntity
                 return Ok(new { valid = false });
             }
 
+            if (string.IsNullOrWhiteSpace(updateEntityDetailEntity.NewAttribute))
+            {
+                return Ok(new { valid = false, errorMessage = "Invalid value selected. Attribute cannot be empty." });
+            }
+
+            if (string.IsNullOrWhiteSpace(updateEntityDetailEntity.NewDescription))
+            {
+                return Ok(new { valid = false, errorMessage = "Invalid value entered. Value cannot be empty." });
+            }
+
             return updateEntityDetailEntity.Entity switch
             {
                 "Broker" => UpdateBrokerDetailEntity(updateEntityDetailEntity, userId),
@@ -43,20 +53,26 @@ namespace API.Controllers.Code.GetEntity
         private OkObjectResult UpdateBrokerDetailEntity(UpdateEntityDetailEntity updateEntityDetailEntity, long userId)
         {
             var brokerDetailController = new BrokerDetailController();
-            var brokerDetailEntity = brokerDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            if (brokerDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+            if (updateEntityDetailEntity.Id == -1)
             {
-                return Ok(new { valid = true });
-            }
+                var brokerAttributeController = new BrokerAttributeController();
+                var brokerAttributeEntity = brokerAttributeController.GetActiveEntityByDescription(updateEntityDetailEntity.NewAttribute);
 
-            if (string.IsNullOrWhiteSpace(updateEntityDetailEntity.NewDescription))
+                brokerDetailController.Insert(userId, updateEntityDetailEntity.EntityId, brokerAttributeEntity.Id, updateEntityDetailEntity.NewDescription);
+            }
+            else
             {
-                return Ok(new { valid = false, errorMessage = "Invalid value entered. Value cannot be empty." });
-            }
+                var brokerDetailEntity = brokerDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            brokerDetailController.UpdateEffectiveToDateTime(brokerDetailEntity.Id, userId);
-            brokerDetailController.Insert(userId, brokerDetailEntity.BrokerId, brokerDetailEntity.BrokerAttributeId, updateEntityDetailEntity.NewDescription);
+                if (brokerDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+                {
+                    return Ok(new { valid = true });
+                }
+
+                brokerDetailController.UpdateEffectiveToDateTime(brokerDetailEntity.Id, userId);
+                brokerDetailController.Insert(userId, brokerDetailEntity.BrokerId, brokerDetailEntity.BrokerAttributeId, updateEntityDetailEntity.NewDescription);
+            }
 
             return Ok(new { valid = true });
         }
@@ -64,20 +80,26 @@ namespace API.Controllers.Code.GetEntity
         private OkObjectResult UpdateCustomerDetailEntity(UpdateEntityDetailEntity updateEntityDetailEntity, long userId)
         {
             var customerDetailController = new CustomerDetailController();
-            var customerDetailEntity = customerDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            if (customerDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+            if (updateEntityDetailEntity.Id == -1)
             {
-                return Ok(new { valid = true });
-            }
+                var customerAttributeController = new CustomerAttributeController();
+                var customerAttributeEntity = customerAttributeController.GetActiveEntityByDescription(updateEntityDetailEntity.NewAttribute);
 
-            if (string.IsNullOrWhiteSpace(updateEntityDetailEntity.NewDescription))
+                customerDetailController.Insert(userId, updateEntityDetailEntity.EntityId, customerAttributeEntity.Id, updateEntityDetailEntity.NewDescription);
+            }
+            else
             {
-                return Ok(new { valid = false, errorMessage = "Invalid value entered. Value cannot be empty." });
-            }
+                var customerDetailEntity = customerDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            customerDetailController.UpdateEffectiveToDateTime(customerDetailEntity.Id, userId);
-            customerDetailController.Insert(userId, customerDetailEntity.CustomerId, customerDetailEntity.CustomerAttributeId, updateEntityDetailEntity.NewDescription);
+                if (customerDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+                {
+                    return Ok(new { valid = true });
+                }
+
+                customerDetailController.UpdateEffectiveToDateTime(customerDetailEntity.Id, userId);
+                customerDetailController.Insert(userId, customerDetailEntity.CustomerId, customerDetailEntity.CustomerAttributeId, updateEntityDetailEntity.NewDescription);
+            }
 
             return Ok(new { valid = true });
         }
@@ -85,20 +107,26 @@ namespace API.Controllers.Code.GetEntity
         private OkObjectResult UpdateProcessDetailEntity(UpdateEntityDetailEntity updateEntityDetailEntity, long userId)
         {
             var processDetailController = new ProcessDetailController();
-            var processDetailEntity = processDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            if (processDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+            if (updateEntityDetailEntity.Id == -1)
             {
-                return Ok(new { valid = true });
-            }
+                var processAttributeController = new ProcessAttributeController();
+                var processAttributeEntity = processAttributeController.GetActiveEntityByDescription(updateEntityDetailEntity.NewAttribute);
 
-            if (string.IsNullOrWhiteSpace(updateEntityDetailEntity.NewDescription))
+                processDetailController.Insert(userId, updateEntityDetailEntity.EntityId, processAttributeEntity.Id, updateEntityDetailEntity.NewDescription);
+            }
+            else
             {
-                return Ok(new { valid = false, errorMessage = "Invalid value entered. Value cannot be empty." });
-            }
+                var processDetailEntity = processDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            processDetailController.UpdateEffectiveToDateTime(processDetailEntity.Id, userId);
-            processDetailController.Insert(userId, processDetailEntity.ProcessId, processDetailEntity.ProcessAttributeId, updateEntityDetailEntity.NewDescription);
+                if (processDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+                {
+                    return Ok(new { valid = true });
+                }
+
+                processDetailController.UpdateEffectiveToDateTime(processDetailEntity.Id, userId);
+                processDetailController.Insert(userId, processDetailEntity.ProcessId, processDetailEntity.ProcessAttributeId, updateEntityDetailEntity.NewDescription);
+            }
 
             return Ok(new { valid = true });
         }
@@ -106,20 +134,26 @@ namespace API.Controllers.Code.GetEntity
         private OkObjectResult UpdateSettingDetailEntity(UpdateEntityDetailEntity updateEntityDetailEntity, long userId)
         {
             var settingDetailController = new SettingDetailController();
-            var settingDetailEntity = settingDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            if (settingDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+            if (updateEntityDetailEntity.Id == -1)
             {
-                return Ok(new { valid = true });
-            }
+                var settingAttributeController = new SettingAttributeController();
+                var settingAttributeEntity = settingAttributeController.GetActiveEntityByDescription(updateEntityDetailEntity.NewAttribute);
 
-            if (string.IsNullOrWhiteSpace(updateEntityDetailEntity.NewDescription))
+                settingDetailController.Insert(userId, updateEntityDetailEntity.EntityId, settingAttributeEntity.Id, updateEntityDetailEntity.NewDescription);
+            }
+            else
             {
-                return Ok(new { valid = false, errorMessage = "Invalid value entered. Value cannot be empty." });
-            }
+                var settingDetailEntity = settingDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            settingDetailController.UpdateEffectiveToDateTime(settingDetailEntity.Id, userId);
-            settingDetailController.Insert(userId, settingDetailEntity.SettingId, settingDetailEntity.SettingAttributeId, updateEntityDetailEntity.NewDescription);
+                if (settingDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+                {
+                    return Ok(new { valid = true });
+                }
+
+                settingDetailController.UpdateEffectiveToDateTime(settingDetailEntity.Id, userId);
+                settingDetailController.Insert(userId, settingDetailEntity.SettingId, settingDetailEntity.SettingAttributeId, updateEntityDetailEntity.NewDescription);
+            }
 
             return Ok(new { valid = true });
         }
@@ -127,20 +161,26 @@ namespace API.Controllers.Code.GetEntity
         private OkObjectResult UpdateUserDetailEntity(UpdateEntityDetailEntity updateEntityDetailEntity, long userId)
         {
             var userDetailController = new UserDetailController();
-            var userDetailEntity = userDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            if (userDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+            if (updateEntityDetailEntity.Id == -1)
             {
-                return Ok(new { valid = true });
-            }
+                var userAttributeController = new UserAttributeController();
+                var userAttributeEntity = userAttributeController.GetActiveEntityByDescription(updateEntityDetailEntity.NewAttribute);
 
-            if (string.IsNullOrWhiteSpace(updateEntityDetailEntity.NewDescription))
+                userDetailController.Insert(userId, updateEntityDetailEntity.EntityId, userAttributeEntity.Id, updateEntityDetailEntity.NewDescription);
+            }
+            else
             {
-                return Ok(new { valid = false, errorMessage = "Invalid value entered. Value cannot be empty." });
-            }
+                var userDetailEntity = userDetailController.GetActiveEntityByDetailId(updateEntityDetailEntity.Id);
 
-            userDetailController.UpdateEffectiveToDateTime(userDetailEntity.Id, userId);
-            userDetailController.Insert(userId, userDetailEntity.UserId, userDetailEntity.UserAttributeId, updateEntityDetailEntity.NewDescription);
+                if (userDetailEntity.Description == updateEntityDetailEntity.NewDescription)
+                {
+                    return Ok(new { valid = true });
+                }
+
+                userDetailController.UpdateEffectiveToDateTime(userDetailEntity.Id, userId);
+                userDetailController.Insert(userId, userDetailEntity.UserId, userDetailEntity.UserAttributeId, updateEntityDetailEntity.NewDescription);
+            }
 
             return Ok(new { valid = true });
         }
