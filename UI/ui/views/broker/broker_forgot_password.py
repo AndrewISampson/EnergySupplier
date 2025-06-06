@@ -22,7 +22,7 @@ def home(request):
 
         if step == 'email':
             try:
-                result = call_api(payload)
+                result = call_api(request, payload)
 
                 if result.json().get('valid'):
                     context['step'] = 'code'
@@ -40,7 +40,7 @@ def home(request):
             payload['iv_ValidationCode'] = encrypted_code['iv']
 
             try:
-                result = call_api(payload)
+                result = call_api(request, payload)
 
                 if result.json().get('valid'):
                     context['step'] = 'reset'
@@ -57,7 +57,7 @@ def home(request):
             payload['iv_password'] = encrypted_password['iv']
 
             try:
-                result = call_api(payload)
+                result = call_api(request, payload)
 
                 if result.json().get('valid'):
                     return redirect('broker_login')

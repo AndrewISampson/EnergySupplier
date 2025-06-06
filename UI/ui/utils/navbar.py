@@ -6,11 +6,10 @@ def determine_navbar_type(request):
 
     payload = {
             'Process': 'd39723b0-3824-4445-88d5-ef7692c13c71',
-            'Path': request.path,
-            'SecurityToken' : request.COOKIES.get('securityToken')
+            'Path': path
         }
     
-    result = call_api(payload)
+    result = call_api(request, payload)
 
     if result.json().get('valid'):
         return result.json().get('navbar')

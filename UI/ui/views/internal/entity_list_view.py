@@ -11,7 +11,7 @@ def entity_list_view(request, route):
         'Entity': base_model
     }
 
-    result = call_api(payload)
+    result = call_api(request, payload)
     raw = result.json().get('entityList')
     records = json.loads(raw) if isinstance(raw, str) else raw
 

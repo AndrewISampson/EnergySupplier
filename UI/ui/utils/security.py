@@ -72,7 +72,7 @@ def login_view(request, process, redirect_path, login_path):
         }
 
         try:
-            result = call_api(payload)
+            result = call_api(request, payload)
             request.session['last_activity'] = datetime.datetime.utcnow().isoformat()
 
             if result.json().get('authenticated'):

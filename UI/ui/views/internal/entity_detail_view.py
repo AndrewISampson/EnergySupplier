@@ -14,7 +14,7 @@ def entity_detail_view(request, route, entity_id):
         'EntityId': entity_id
     }
 
-    result = call_api(payload)
+    result = call_api(request, payload)
     raw = result.json().get('entityList')
     records = json.loads(raw) if isinstance(raw, str) else raw
 

@@ -2,7 +2,7 @@ from django.shortcuts import render
 import requests
 from django.conf import settings
 
-def call_api(payload, method='POST'):
+def call_api(request, payload, method='POST'):
     """
     Sends a JSON payload to the C# API and returns the response.
     
@@ -14,6 +14,10 @@ def call_api(payload, method='POST'):
     Returns:
         dict: JSON response from API
     """
+    if request is not None:
+        token = request.COOKIES.get('securityToken')
+        payload['SecurityToken'] = token if token else 'MISSING_SECURITY_TOKEN'
+        
     url = f"{settings.API_BASE_URL}"
     verify_ssl = not getattr(settings, 'SKIP_API_SSL_VERIFICATION', False)
 

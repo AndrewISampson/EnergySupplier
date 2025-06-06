@@ -15,7 +15,7 @@ def update_entity_detail(request):
             'NewDescription': data['new_description'],
             'SecurityToken' : request.COOKIES.get('securityToken')
         }
-        result = call_api(payload)
+        result = call_api(request, payload)
         
         if result.json().get('valid'):
             return JsonResponse({'updated_description': data['new_description']})
