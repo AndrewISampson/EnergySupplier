@@ -14,9 +14,9 @@
                 <thead class="table-light">
                     <tr>
                         <th scope="col" style="width: 1%;">ID</th>
-                        <th scope="col">Attribute</th>
+                        <th scope="col" style="width: 15%;">Attribute</th>
                         <th scope="col">Description</th>
-                        <th scope="col" style="width: 1%;">Action</th>
+                        <th scope="col" style="width: 11%;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,7 +36,7 @@
             </div>
         {% endif %}
         <div class="mt-3">
-            <a href="{% url 'entity_list_view' route=route %}" class="btn btn-secondary">Back to List</a>
+            <a href="{% url 'entity_list_view' route=entity_name|lower %}?entity={{ entity_name }}" class="btn btn-secondary">Back to List</a>
         </div>
     </div>
 </div>
@@ -44,31 +44,47 @@
 <script>
     async function editRow(button) {
         const row = button.closest('tr');
-        const id = row.querySelector('th').textContent.trim(); // assuming ID is in <th>
+        const id = row.querySelector('th').textContent.trim();
         const descriptionCell = row.querySelector('.description-cell');
 
         if (button.textContent === 'Edit') {
-            // Switch to edit mode
             const originalText = descriptionCell.textContent.trim();
             const input = document.createElement('input');
             input.type = 'text';
             input.className = 'form-control';
             input.value = originalText;
+
+            // Save original text for cancellation
+            descriptionCell.setAttribute('data-original-text', originalText);
             descriptionCell.innerHTML = '';
             descriptionCell.appendChild(input);
 
+            // Change Edit button to Save
             button.textContent = 'Save';
             button.classList.remove('btn-primary');
             button.classList.add('btn-success');
+
+            // Add Cancel button
+            const cancelBtn = document.createElement('button');
+            cancelBtn.textContent = 'Cancel';
+            cancelBtn.className = 'btn btn-sm btn-secondary ms-2';
+            cancelBtn.onclick = function () {
+                // Revert to original text
+                descriptionCell.innerHTML = descriptionCell.getAttribute('data-original-text');
+                button.textContent = 'Edit';
+                button.classList.remove('btn-success');
+                button.classList.add('btn-primary');
+                cancelBtn.remove();
+            };
+            button.parentElement.appendChild(cancelBtn);
         } else {
-            // Save and call API
             const newValue = descriptionCell.querySelector('input').value;
 
             const response = await fetch("{% url 'update_entity_detail' %}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')  // if CSRF is enabled
+                    'X-CSRFToken': getCookie('csrftoken')
                 },
                 body: JSON.stringify({
                     entity: "{{ entity_name }}",
@@ -85,7 +101,6 @@
         }
     }
 
-    // Utility to get CSRF token from cookie (required for Django POST)
     function getCookie(name) {
         const cookieValue = document.cookie
             .split('; ')
@@ -93,4 +108,5 @@
         return cookieValue ? decodeURIComponent(cookieValue.split('=')[1]) : null;
     }
 </script>
+
 {% endblock %}

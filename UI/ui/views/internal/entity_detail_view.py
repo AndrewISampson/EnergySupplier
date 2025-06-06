@@ -5,12 +5,12 @@ from ui.utils.api import call_api
 from ui.views.broker.broker_master import load_broker_page
 
 def entity_detail_view(request, route, entity_id):
-    app_label, base_model = route.split('.')
     detail_name = request.GET.get('name', '')
+    entity = request.GET.get('entity')
 
     payload = {
         'Process': 'a3ebe6c6-c0cd-4a2d-842b-58fc5b71c7fb',
-        'Entity': base_model,
+        'Entity': entity,
         'EntityId': entity_id
     }
 
@@ -40,8 +40,7 @@ def entity_detail_view(request, route, entity_id):
         detail_dict = {}
 
     return load_broker_page(request, 'internal/entity_detail.html', {
-        'route': route,
-        'entity_name': base_model,
+        'entity_name': entity,
         'detail_name': detail_name,
         'detail': detail_dict
     })

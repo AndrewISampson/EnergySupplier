@@ -10,6 +10,6 @@ urlpatterns = [
     path("dashboard", internal_dashboard.home, name="internal_dashboard"),
     path("configuration", internal_configuration.home, name="internal_configuration"),
     path('update-detail/', update_entity_detail, name='update_entity_detail'),
-    path('<str:route>/', entity_list_view, name='entity_list_view'),
-    path('<str:route>/<int:entity_id>/', entity_detail_view, name='entity_detail_view'),
+    path('configuration/<str:route>/', entity_list_view, name='entity_list_view'),
+    path('configuration/<str:route>/<int:entity_id>/', entity_detail_view, name='entity_detail_view'),
 ]

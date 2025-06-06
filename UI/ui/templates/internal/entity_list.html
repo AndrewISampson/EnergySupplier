@@ -25,7 +25,7 @@
                     <td class="text-nowrap">{{ item.Id }}</td>
                     <td>{{ item.Name }}</td>
                     <td class="text-nowrap">
-                        <a href="{% url 'entity_detail_view' route=route entity_id=item|get_item:'Id' %}?name={{ item|get_item:'Name'|urlencode }}" class="btn btn-sm btn-primary">
+                        <a href="{% url 'entity_detail_view' route=entity_name|lower entity_id=item|get_item:'Id' %}?name={{ item|get_item:'Name'|urlencode }}&entity={{ entity_name }}" class="btn btn-sm btn-primary">
                             Edit
                         </a>
                         <a href="" class="btn btn-sm btn-danger">

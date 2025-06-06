@@ -31,8 +31,8 @@
 </style>
 
 <div class="button-grid">
-    {% for route, name in pages %}
-        <a href="{% url 'entity_list_view' route=route %}">{{ name }}</a>
+    {% for name in pages %}
+        <a href="{% url 'entity_list_view' route=name|lower %}?entity={{ name }}">{{ name }}</a>
     {% endfor %}
     <a>Create New Entity</a>
 </div>
