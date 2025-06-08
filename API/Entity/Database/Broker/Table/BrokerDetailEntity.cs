@@ -33,5 +33,12 @@ namespace API.Entity.Database.Broker.Table
             BrokerAttributeId = Convert.ToInt64(dataRow["BrokerAttributeId"].ToString());
             Description = dataRow["Description"].ToString();
         }
+
+        public BrokerDetailEntity(long brokerId, long brokerAttributeId, string description)
+        {
+            BrokerId = brokerId;
+            BrokerAttributeId = brokerAttributeId;
+            Description = description;
+        }
     }
 }

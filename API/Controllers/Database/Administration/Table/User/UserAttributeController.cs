@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Administration.Table.User
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<UserAttributeEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<UserAttributeEntity>();
         }
 
         internal UserAttributeEntity GetActiveEntityByDescription(string description)

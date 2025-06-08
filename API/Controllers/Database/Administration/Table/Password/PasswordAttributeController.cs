@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Administration.Table.Password
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<PasswordAttributeEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<PasswordAttributeEntity>();
         }
 
         internal PasswordAttributeEntity GetActiveEntityByDescription(string description)

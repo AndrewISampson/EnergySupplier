@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Mapping.Table
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<Administration_Password_To_Administration_UserEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<Administration_Password_To_Administration_UserEntity>();
         }
 
         internal List<Administration_Password_To_Administration_UserEntity> GetActiveEntityByPasswordId(long passwordId)

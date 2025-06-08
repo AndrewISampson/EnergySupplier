@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Broker.Table.Broker
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<BrokerAttributeEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<BrokerAttributeEntity>();
         }
 
         internal BrokerAttributeEntity GetActiveEntityByDescription(string description)

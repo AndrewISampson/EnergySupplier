@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Broker.Table.Broker
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<BrokerDetailEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<BrokerDetailEntity>();
         }
 
         internal BrokerDetailEntity GetActiveEntityByDetailId(long detailId)
@@ -47,6 +47,23 @@ namespace API.Controllers.Database.Broker.Table.Broker
         {
             var dataRowList = _databaseController.GetList($"SELECT {_selectColumns} FROM \"{_schema}\".\"{_table}\" WHERE \"IsActiveRecord\" = '1' AND \"BrokerAttributeId\" = {attributeId}");
             return _genericController.PopulateListFromDataRowList(dataRowList, dataRow => new BrokerDetailEntity(dataRow));
+        }
+
+        internal void BulkInsert(long createdByUserId, List<BrokerDetailEntity> brokerDetailEntityList)
+        {
+            var columnList = _genericController.GetColumnNameListFromEntity<BrokerDetailEntity>();
+
+            var brokerDetailDictionary = brokerDetailEntityList.GroupBy(b => b.BrokerId).ToDictionary
+                (
+                    g => g.Key,
+                    g => g.Select(b => b).GroupBy(a => a.BrokerAttributeId).ToDictionary
+                        (
+                            g1 => g1.Key,
+                            g1 => g1.Select(d => d.Description).ToList()
+                        )
+                );
+
+            _databaseController.BulkInsertDetail(createdByUserId, _schema, _table, columnList, brokerDetailDictionary);
         }
 
         internal void Insert(long createdByUserId, long id, long attributeId, string description)

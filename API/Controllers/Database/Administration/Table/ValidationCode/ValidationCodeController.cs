@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Administration.Table.ValidationCode
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<ValidationCodeEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<ValidationCodeEntity>();
         }
 
         internal ValidationCodeEntity InsertNewAndGetEntity(long createdByUserId)

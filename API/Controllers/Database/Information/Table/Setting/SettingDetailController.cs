@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Information.Table.Setting
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<SettingDetailEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<SettingDetailEntity>();
         }
 
         internal SettingDetailEntity GetActiveEntityByDetailId(long detailId)

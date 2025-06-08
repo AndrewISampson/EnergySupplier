@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Administration.Table.Login
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<LoginEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<LoginEntity>();
         }
 
         internal LoginEntity GetActiveEntityByGuid(Guid guid)

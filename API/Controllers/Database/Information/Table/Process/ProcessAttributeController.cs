@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Information.Table.Process
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<ProcessAttributeEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<ProcessAttributeEntity>();
         }
 
         internal ProcessAttributeEntity GetActiveEntityByDescription(string description)

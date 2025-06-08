@@ -4,6 +4,7 @@ using API.Controllers.Database.Customer.Table.Customer;
 using API.Controllers.Database.Information.Table.Process;
 using API.Controllers.Database.Information.Table.Setting;
 using API.Entity.Code.GetEntity.InsertEntity;
+using API.Entity.Database.Broker.Table;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -66,11 +67,14 @@ namespace API.Controllers.Code.GetEntity
             var brokerController = new BrokerController();
             var brokerEntity = brokerController.InsertNewAndGetEntity(userId);
 
+            var brokerDetailEntityList = new List<BrokerDetailEntity>();
             for (var i = 0; i < insertEntityEntity.Attributes.Count; i++)
             {
                 var brokerAttributeEntity = brokerAttributeController.GetActiveEntityByDescription(insertEntityEntity.Attributes[i]);
-                brokerDetailController.Insert(userId, brokerEntity.Id, brokerAttributeEntity.Id, insertEntityEntity.Descriptions[i]);
+                brokerDetailEntityList.Add(new BrokerDetailEntity(brokerEntity.Id, brokerAttributeEntity.Id, insertEntityEntity.Descriptions[i]));
             }
+
+            brokerDetailController.BulkInsert(userId, brokerDetailEntityList);
 
             return Ok(new { valid = true, new_entity_id = brokerEntity.Id });
         }

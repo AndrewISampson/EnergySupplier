@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Administration.Table.ValidationCode
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<ValidationCodeDetailEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<ValidationCodeDetailEntity>();
         }
 
         internal ValidationCodeDetailEntity GetActiveEntityByIdAndAttributeId(long id, long attributeId)

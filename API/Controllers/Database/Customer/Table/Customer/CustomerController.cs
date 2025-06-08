@@ -16,7 +16,7 @@ namespace API.Controllers.Database.Customer.Table.Customer
             _databaseController = new DatabaseController();
             _genericController = new GenericController();
 
-            _selectColumns = _genericController.GetColumnListFromEntity<CustomerEntity>();
+            _selectColumns = _genericController.GetColumnNameStringFromEntity<CustomerEntity>();
         }
 
         internal CustomerEntity GetActiveEntityByGuid(Guid guid)
